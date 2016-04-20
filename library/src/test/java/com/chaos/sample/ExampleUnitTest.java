@@ -1,4 +1,4 @@
-package com.chaos.rxfirebase;
+package com.chaos.rx;
 
 import org.junit.Test;
 

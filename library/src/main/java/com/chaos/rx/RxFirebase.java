@@ -190,19 +190,19 @@ public final class RxFirebase {
       @Override public void call(final Subscriber<? super ChildEvent> subscriber) {
         firebase.child(path).addChildEventListener(new ChildEventListener() {
           @Override public void onChildAdded(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(new ChildEvent(dataSnapshot, Event.EventType.CHILD_ADDED));
+            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_ADDED, previousChildName));
           }
 
           @Override public void onChildChanged(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(new ChildEvent(dataSnapshot, Event.EventType.CHILD_CHANGED));
+            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_CHANGED, previousChildName));
           }
 
           @Override public void onChildRemoved(final DataSnapshot dataSnapshot) {
-            subscriber.onNext(new ChildEvent(dataSnapshot, Event.EventType.CHILD_REMOVED));
+            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_REMOVED));
           }
 
           @Override public void onChildMoved(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(new ChildEvent(dataSnapshot, Event.EventType.CHILD_MOVED));
+            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_MOVED, previousChildName));
           }
 
           @Override public void onCancelled(final FirebaseError firebaseError) {
@@ -243,27 +243,5 @@ public final class RxFirebase {
         return childEvent.getEventType().equals(Event.EventType.CHILD_MOVED);
       }
     });
-  }
-
-  public static final class ChildEvent {
-    private final DataSnapshot dataSnapshot;
-    private final Event.EventType eventType;
-
-    private ChildEvent(final DataSnapshot dataSnapshot, final Event.EventType eventType) {
-      this.dataSnapshot = dataSnapshot;
-      this.eventType = eventType;
-    }
-
-    public static ChildEvent create(final DataSnapshot dataSnapshot, final Event.EventType eventType) {
-      return new ChildEvent(dataSnapshot, eventType);
-    }
-
-    public final  DataSnapshot getDataSnapshot() {
-      return dataSnapshot;
-    }
-
-    public final Event.EventType getEventType() {
-      return eventType;
-    }
   }
 }
