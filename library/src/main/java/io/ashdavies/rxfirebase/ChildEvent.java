@@ -8,21 +8,28 @@ public final class ChildEvent {
   private final Event.EventType eventType;
   private final String previousChildName;
 
-  private ChildEvent(final DataSnapshot dataSnapshot, final Event.EventType eventType, final String previousChildName) {
+  private ChildEvent(
+      final DataSnapshot dataSnapshot,
+      final Event.EventType eventType,
+      final String previousChildName) {
     this.dataSnapshot = dataSnapshot;
     this.eventType = eventType;
     this.previousChildName = previousChildName;
   }
 
-  public static ChildEvent create(final DataSnapshot dataSnapshot, final Event.EventType eventType) {
+  public static ChildEvent create(
+      final DataSnapshot dataSnapshot, final Event.EventType eventType) {
     return new ChildEvent(dataSnapshot, eventType, null);
   }
 
-  public static ChildEvent create(final DataSnapshot dataSnapshot, final Event.EventType eventType, final String previousChildName) {
+  public static ChildEvent create(
+      final DataSnapshot dataSnapshot,
+      final Event.EventType eventType,
+      final String previousChildName) {
     return new ChildEvent(dataSnapshot, eventType, previousChildName);
   }
 
-  public final  DataSnapshot getDataSnapshot() {
+  public final DataSnapshot getDataSnapshot() {
     return dataSnapshot;
   }
 
