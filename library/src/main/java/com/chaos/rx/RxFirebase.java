@@ -7,210 +7,221 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.firebase.client.core.view.Event;
-import com.firebase.client.snapshot.PriorityUtilities;
 
 import java.util.Map;
 
+import rx.AsyncEmitter;
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
 
 public final class RxFirebase {
   private final Firebase firebase;
+  private final AsyncEmitter.BackpressureMode mode;
 
-  private RxFirebase(Firebase firebase) {
+  private RxFirebase(final Firebase firebase, final AsyncEmitter.BackpressureMode mode) {
     this.firebase = firebase;
+    this.mode = mode;
   }
 
   public static RxFirebase with(final Firebase firebase) {
-    return new RxFirebase(firebase);
+    return with(firebase, AsyncEmitter.BackpressureMode.LATEST);
   }
 
-  public final Observable<AuthData> authAnonymously() {
-    return Observable.create(new Observable.OnSubscribe<AuthData>() {
-      @Override public void call(final Subscriber<? super AuthData> subscriber) {
+  public static RxFirebase with(final Firebase firebase, final AsyncEmitter.BackpressureMode mode) {
+    return new RxFirebase(firebase, mode);
+  }
+
+  public Observable<AuthData> authAnonymously() {
+    return Observable.fromAsync(new Action1<AsyncEmitter<AuthData>>() {
+      @Override public void call(final AsyncEmitter<AuthData> emitter) {
         firebase.authAnonymously(new Firebase.AuthResultHandler() {
-          @Override public void onAuthenticated(final AuthData authData) {
-            subscriber.onNext(authData);
-            subscriber.onCompleted();
+          @Override public void onAuthenticated(final AuthData data) {
+            emitter.onNext(data);
+            emitter.onCompleted();
           }
 
-          @Override public void onAuthenticationError(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onAuthenticationError(final FirebaseError error) {
+            emitter.onError(error.toException());
           }
         });
       }
-    });
+    }, mode);
   }
 
-  public final Observable<AuthData> authWithPassword(final String email, final String password) {
-    return Observable.create(new Observable.OnSubscribe<AuthData>() {
-      @Override public void call(final Subscriber<? super AuthData> subscriber) {
+  public Observable<AuthData> authWithPassword(final String email, final String password) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<AuthData>>() {
+      @Override public void call(final AsyncEmitter<AuthData> emitter) {
         firebase.authWithPassword(email, password, new Firebase.AuthResultHandler() {
-          @Override public void onAuthenticated(final AuthData authData) {
-            subscriber.onNext(authData);
-            subscriber.onCompleted();
+          @Override public void onAuthenticated(final AuthData data) {
+            emitter.onNext(data);
+            emitter.onCompleted();
           }
 
-          @Override public void onAuthenticationError(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onAuthenticationError(final FirebaseError error) {
+            emitter.onError(error.toException());
           }
         });
       }
-    });
+    }, mode);
   }
 
-  public final Observable<AuthData> authWithOAuthToken(final String token, final String provider) {
-    return Observable.create(new Observable.OnSubscribe<AuthData>() {
-      @Override public void call(final Subscriber<? super AuthData> subscriber) {
+  public final Observable<AuthData> authWithOAuthToken(final String provider, final String token) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<AuthData>>() {
+      @Override public void call(final AsyncEmitter<AuthData> emitter) {
         firebase.authWithOAuthToken(provider, token, new Firebase.AuthResultHandler() {
-          @Override public void onAuthenticated(final AuthData authData) {
-            subscriber.onNext(authData);
-            subscriber.onCompleted();
+          @Override public void onAuthenticated(final AuthData data) {
+            emitter.onNext(data);
+            emitter.onCompleted();
           }
 
-          @Override public void onAuthenticationError(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onAuthenticationError(final FirebaseError error) {
+            emitter.onError(error.toException());
           }
         });
       }
-    });
+    }, mode);
   }
 
   public final Observable<Map<String, Object>> createUser(final String email, final String password) {
-    return Observable.create(new Observable.OnSubscribe<Map<String, Object>>() {
-      @Override public void call(final Subscriber<? super Map<String, Object>> subscriber) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<Map<String, Object>>>() {
+      @Override public void call(final AsyncEmitter<Map<String, Object>> emitter) {
         firebase.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
-          @Override public void onSuccess(Map<String, Object> result) {
-            subscriber.onNext(result);
-            subscriber.onCompleted();
+          @Override public void onSuccess(final Map<String, Object> result) {
+            emitter.onNext(result);
+            emitter.onCompleted();
           }
 
-          @Override public void onError(FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onError(FirebaseError error) {
+            emitter.onError(error.toException());
           }
         });
       }
-    });
+    }, mode);
   }
 
-  public final Observable<Boolean> setValue(final Object value) {
-    return setValue(value, PriorityUtilities.parsePriority(null));
+  public final Observable<Void> setValue(final Object value) {
+    return setValue(value, null);
   }
 
-  public final Observable<Boolean> setValue(final Object value, final Object priority) {
-    return Observable.create(new Observable.OnSubscribe<Boolean>() {
-      @Override public void call(final Subscriber<? super Boolean> subscriber) {
+  public final Observable<Void> setValue(final Object value, final Object priority) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<Void>>() {
+      @Override public void call(final AsyncEmitter<Void> emitter) {
         firebase.setValue(value, priority, new Firebase.CompletionListener() {
-          @Override public void onComplete(final FirebaseError firebaseError, Firebase firebase) {
-            if (firebaseError == null) {
-              subscriber.onNext(true);
-              subscriber.onCompleted();
+          @Override public void onComplete(final FirebaseError error, final Firebase firebase) {
+            if (error == null) {
+              emitter.onCompleted();
             } else {
-              subscriber.onError(firebaseError.toException());
+              emitter.onError(error.toException());
             }
           }
         });
       }
-    });
+    }, mode);
   }
 
   public final Observable<AuthData> onAuthStateEvent() {
-    return Observable.create(new Observable.OnSubscribe<AuthData>() {
-      @Override public void call(final Subscriber<? super AuthData> subscriber) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<AuthData>>() {
+      @Override public void call(final AsyncEmitter<AuthData> emitter) {
         final Firebase.AuthStateListener listener = new Firebase.AuthStateListener() {
-          @Override public void onAuthStateChanged(final AuthData authData) {
-            subscriber.onNext(authData);
+          @Override public void onAuthStateChanged(final AuthData data) {
+            emitter.onNext(data);
           }
         };
 
-        subscriber.add(Subscriptions.create(new Action0() {
+        /*subscriber.add(Subscriptions.create(new Action0() {
           @Override public void call() {
             firebase.removeAuthStateListener(listener);
           }
-        }));
+        }));*/
 
         firebase.addAuthStateListener(listener);
       }
-    });
+    }, mode);
   }
 
   public final Observable<DataSnapshot> onValueEvent(final String path) {
-    return Observable.create(new Observable.OnSubscribe<DataSnapshot>() {
-      @Override public void call(final Subscriber<? super DataSnapshot> subscriber) {
-        final ValueEventListener valueEventListener = firebase.child(path).addValueEventListener(new ValueEventListener() {
-          @Override public void onDataChange(final DataSnapshot dataSnapshot) {
-            subscriber.onNext(dataSnapshot);
+    return Observable.fromAsync(new Action1<AsyncEmitter<DataSnapshot>>() {
+      @Override public void call(final AsyncEmitter<DataSnapshot> emitter) {
+        final ValueEventListener listener = new ValueEventListener() {
+          @Override public void onDataChange(final DataSnapshot snapshot) {
+            emitter.onNext(snapshot);
           }
 
-          @Override public void onCancelled(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
-          }
-        });
-
-        subscriber.add(Subscriptions.create(new Action0() {
-
-          @Override
-          public void call() {
-            firebase.child(path).removeEventListener(valueEventListener);
-          }
-        }));
-      }
-    });
-  }
-
-  public Observable<DataSnapshot> onSingleValueEvent(final String path) {
-    return Observable.create(new Observable.OnSubscribe<DataSnapshot>() {
-      @Override public void call(final Subscriber<? super DataSnapshot> subscriber) {
-        final ValueEventListener valueEventListener = new ValueEventListener() {
-          @Override public void onDataChange(final DataSnapshot dataSnapshot) {
-            subscriber.onNext(dataSnapshot);
-          }
-
-          @Override public void onCancelled(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onCancelled(final FirebaseError error) {
+            emitter.onError(error.toException());
           }
         };
 
-        firebase.child(path).addListenerForSingleValueEvent(valueEventListener);
-
-        subscriber.add(Subscriptions.create(new Action0() {
+        /*subscriber.add(Subscriptions.create(new Action0() {
           @Override public void call() {
-            firebase.child(path).removeEventListener(valueEventListener);
+            firebase.child(path).removeEventListener(listener);
           }
-        }));
+        }));*/
+
+        firebase.child(path).addValueEventListener(listener);
       }
-    });
+    }, mode);
+  }
+
+  public Observable<DataSnapshot> onSingleValueEvent(final String path) {
+    return Observable.fromAsync(new Action1<AsyncEmitter<DataSnapshot>>() {
+      @Override public void call(final AsyncEmitter<DataSnapshot> emitter) {
+        final ValueEventListener listener = new ValueEventListener() {
+          @Override public void onDataChange(final DataSnapshot snapshot) {
+            emitter.onNext(snapshot);
+          }
+
+          @Override public void onCancelled(final FirebaseError error) {
+            emitter.onError(error.toException());
+          }
+        };
+
+        /*subscriber.add(Subscriptions.create(new Action0() {
+          @Override public void call() {
+            firebase.child(path).removeEventListener(listener);
+          }
+        }));*/
+
+        firebase.child(path).addListenerForSingleValueEvent(listener);
+      }
+    }, mode);
   }
 
   public final Observable<ChildEvent> onChildEvent(final String path) {
-    return Observable.create(new Observable.OnSubscribe<ChildEvent>() {
-      @Override public void call(final Subscriber<? super ChildEvent> subscriber) {
-        firebase.child(path).addChildEventListener(new ChildEventListener() {
-          @Override public void onChildAdded(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_ADDED, previousChildName));
+    return Observable.fromAsync(new Action1<AsyncEmitter<ChildEvent>>() {
+      @Override public void call(final AsyncEmitter<ChildEvent> emitter) {
+        final ChildEventListener listener = new ChildEventListener() {
+          @Override public void onChildAdded(final DataSnapshot snapshot, final String previous) {
+            emitter.onNext(ChildEvent.create(snapshot, Event.EventType.CHILD_ADDED, previous));
           }
 
-          @Override public void onChildChanged(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_CHANGED, previousChildName));
+          @Override public void onChildChanged(final DataSnapshot snapshot, final String previous) {
+            emitter.onNext(ChildEvent.create(snapshot, Event.EventType.CHILD_CHANGED, previous));
           }
 
-          @Override public void onChildRemoved(final DataSnapshot dataSnapshot) {
-            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_REMOVED));
+          @Override public void onChildRemoved(final DataSnapshot snapshot) {
+            emitter.onNext(ChildEvent.create(snapshot, Event.EventType.CHILD_REMOVED));
           }
 
-          @Override public void onChildMoved(final DataSnapshot dataSnapshot, final String previousChildName) {
-            subscriber.onNext(ChildEvent.create(dataSnapshot, Event.EventType.CHILD_MOVED, previousChildName));
+          @Override public void onChildMoved(final DataSnapshot snapshot, final String previous) {
+            emitter.onNext(ChildEvent.create(snapshot, Event.EventType.CHILD_MOVED, previous));
           }
 
-          @Override public void onCancelled(final FirebaseError firebaseError) {
-            subscriber.onError(firebaseError.toException());
+          @Override public void onCancelled(final FirebaseError error) {
+            emitter.onError(error.toException());
           }
-        });
+        };
+
+        /*subscriber.add(Subscriptions.create(new Action0() {
+          @Override public void call() {
+            firebase.child(path).removeEventListener(listener);
+          }
+        }));*/
+
+        firebase.child(path).addChildEventListener(listener);
       }
-    });
+    }, mode);
   }
 
   public final Observable<ChildEvent> onChildAdded(final String path) {

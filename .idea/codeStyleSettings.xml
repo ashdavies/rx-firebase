@@ -37,9 +37,9 @@
         <JavaCodeStyleSettings>
           <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION" value="true" />
         </JavaCodeStyleSettings>
-        <MultiMarkdownCodeStyleSettings>
+        <MarkdownNavigatorCodeStyleSettings>
           <option name="RIGHT_MARGIN" value="72" />
-        </MultiMarkdownCodeStyleSettings>
+        </MarkdownNavigatorCodeStyleSettings>
         <Objective-C-extensions>
           <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
           <option name="RELEASE_STYLE" value="IVAR" />
@@ -69,19 +69,15 @@
           </extensions>
         </Objective-C-extensions>
         <XML>
+          <option name="XML_KEEP_LINE_BREAKS" value="false" />
+          <option name="XML_ALIGN_ATTRIBUTES" value="false" />
           <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
-          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
-        <codeStyleSettings language="Groovy">
-          <indentOptions>
-            <option name="INDENT_SIZE" value="2" />
-            <option name="CONTINUATION_INDENT_SIZE" value="4" />
-            <option name="TAB_SIZE" value="2" />
-          </indentOptions>
-        </codeStyleSettings>
         <codeStyleSettings language="JAVA">
-          <option name="METHOD_ANNOTATION_WRAP" value="1" />
-          <option name="CLASS_ANNOTATION_WRAP" value="1" />
+          <option name="METHOD_ANNOTATION_WRAP" value="0" />
+          <option name="FIELD_ANNOTATION_WRAP" value="1" />
+          <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
+          <option name="VARIABLE_ANNOTATION_WRAP" value="1" />
           <indentOptions>
             <option name="INDENT_SIZE" value="2" />
             <option name="CONTINUATION_INDENT_SIZE" value="4" />
@@ -91,9 +87,7 @@
         <codeStyleSettings language="XML">
           <option name="FORCE_REARRANGE_MODE" value="1" />
           <indentOptions>
-            <option name="INDENT_SIZE" value="2" />
-            <option name="CONTINUATION_INDENT_SIZE" value="2" />
-            <option name="TAB_SIZE" value="2" />
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
           </indentOptions>
           <arrangement>
             <rules>
