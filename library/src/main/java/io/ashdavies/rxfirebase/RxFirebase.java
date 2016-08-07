@@ -129,11 +129,11 @@ public final class RxFirebase {
           }
         };
 
-        /*subscriber.add(Subscriptions.create(new Action0() {
-          @Override public void call() {
+        emitter.setCancellation(new AsyncEmitter.Cancellable() {
+          @Override public void cancel() throws Exception {
             firebase.removeAuthStateListener(listener);
           }
-        }));*/
+        });
 
         firebase.addAuthStateListener(listener);
       }
@@ -153,11 +153,11 @@ public final class RxFirebase {
           }
         };
 
-        /*subscriber.add(Subscriptions.create(new Action0() {
-          @Override public void call() {
+        emitter.setCancellation(new AsyncEmitter.Cancellable() {
+          @Override public void cancel() throws Exception {
             firebase.child(path).removeEventListener(listener);
           }
-        }));*/
+        });
 
         firebase.child(path).addValueEventListener(listener);
       }
@@ -177,11 +177,11 @@ public final class RxFirebase {
           }
         };
 
-        /*subscriber.add(Subscriptions.create(new Action0() {
-          @Override public void call() {
+        emitter.setCancellation(new AsyncEmitter.Cancellable() {
+          @Override public void cancel() throws Exception {
             firebase.child(path).removeEventListener(listener);
           }
-        }));*/
+        });
 
         firebase.child(path).addListenerForSingleValueEvent(listener);
       }
@@ -213,11 +213,11 @@ public final class RxFirebase {
           }
         };
 
-        /*subscriber.add(Subscriptions.create(new Action0() {
-          @Override public void call() {
+        emitter.setCancellation(new AsyncEmitter.Cancellable() {
+          @Override public void cancel() throws Exception {
             firebase.child(path).removeEventListener(listener);
           }
-        }));*/
+        });
 
         firebase.child(path).addChildEventListener(listener);
       }
