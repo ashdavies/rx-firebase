@@ -1,7 +1,7 @@
 ### Android RxFirebase###
 ![Build Status](https://img.shields.io/travis/ashdavies/android-rxfirebase.svg)
 ![Coverage](https://img.shields.io/codecov/c/github/ashdavies/android-rxfirebase.svg)
-![Version](https://img.shields.io/badge/version-0.4.2-yellowgreen.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-yellowgreen.svg)
 ![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)
 
 **RxJava wrapper for use with the Android Firebase client**
@@ -53,6 +53,7 @@ when instantiation the `RxFirebase` object.
 ####ToDo####
 - Improve RxFirebase api
 - Extract exception types
+- Sample application
 - Test coverage
 
 ####License####
