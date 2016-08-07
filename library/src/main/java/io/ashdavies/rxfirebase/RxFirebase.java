@@ -1,4 +1,4 @@
-package com.chaos.rx;
+package io.ashdavies.rxfirebase;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
