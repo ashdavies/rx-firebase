@@ -20,7 +20,9 @@ before_script:
     - chmod +x gradlew
 
 script:
-    - ./gradlew clean test jacocoTestReport build bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false
+    - ./gradlew clean test jacocoTestReport build
+    - ./gradlew library:bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false
+    - ./gradlew auth:bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

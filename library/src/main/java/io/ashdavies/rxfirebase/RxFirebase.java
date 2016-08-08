@@ -131,33 +131,6 @@ public final class RxFirebase {
         mode);
   }
 
-  public final Observable<Void> setValue(final Object value) {
-    return setValue(value, null);
-  }
-
-  public final Observable<Void> setValue(final Object value, final Object priority) {
-    return Observable.fromAsync(
-        new Action1<AsyncEmitter<Void>>() {
-          @Override
-          public void call(final AsyncEmitter<Void> emitter) {
-            firebase.setValue(
-                value,
-                priority,
-                new Firebase.CompletionListener() {
-                  @Override
-                  public void onComplete(final FirebaseError error, final Firebase firebase) {
-                    if (error == null) {
-                      emitter.onCompleted();
-                    } else {
-                      emitter.onError(error.toException());
-                    }
-                  }
-                });
-          }
-        },
-        mode);
-  }
-
   public final Observable<AuthData> onAuthStateEvent() {
     return Observable.fromAsync(
         new Action1<AsyncEmitter<AuthData>>() {
@@ -180,6 +153,33 @@ public final class RxFirebase {
                 });
 
             firebase.addAuthStateListener(listener);
+          }
+        },
+        mode);
+  }
+
+  public final Observable<Void> setValue(final Object value) {
+    return setValue(value, null);
+  }
+
+  public final Observable<Void> setValue(final Object value, final Object priority) {
+    return Observable.fromAsync(
+        new Action1<AsyncEmitter<Void>>() {
+          @Override
+          public void call(final AsyncEmitter<Void> emitter) {
+            firebase.setValue(
+                value,
+                priority,
+                new Firebase.CompletionListener() {
+                  @Override
+                  public void onComplete(final FirebaseError error, final Firebase firebase) {
+                    if (error == null) {
+                      emitter.onCompleted();
+                    } else {
+                      emitter.onError(error.toException());
+                    }
+                  }
+                });
           }
         },
         mode);
