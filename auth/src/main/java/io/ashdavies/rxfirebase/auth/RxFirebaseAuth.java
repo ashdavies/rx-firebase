@@ -2,6 +2,7 @@ package io.ashdavies.rxfirebase.auth;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -99,5 +100,21 @@ public final class RxFirebaseAuth {
 
   public Observable<Void> sendPasswordResetEmail(final String email) {
     return RxUtils.from(firebase.sendPasswordResetEmail(email));
+  }
+
+  public Observable<Void> delete() {
+    return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
+      @Override public Observable<Void> call(FirebaseUser user) {
+        return RxUtils.from(user.delete());
+      }
+    });
+  }
+
+  public Observable<Void> reauthenticate(final AuthCredential credentials) {
+    return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
+      @Override public Observable<Void> call(FirebaseUser user) {
+        return RxUtils.from(user.reauthenticate(credentials));
+      }
+    });
   }
 }
