@@ -10,8 +10,8 @@ import rx.AsyncEmitter;
 import rx.Observable;
 import rx.functions.Action1;
 
-public final class RxUtils {
-  private RxUtils() {
+public final class RxSupport {
+  private RxSupport() {
     throw new IllegalArgumentException("No instances");
   }
 

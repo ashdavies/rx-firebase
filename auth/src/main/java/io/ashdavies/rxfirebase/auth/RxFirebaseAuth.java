@@ -3,6 +3,7 @@ package io.ashdavies.rxfirebase.auth;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -31,6 +32,26 @@ public final class RxFirebaseAuth {
 
   public static RxFirebaseAuth getInstance(FirebaseAuth firebase, AsyncEmitter.BackpressureMode mode) {
     return new RxFirebaseAuth(firebase, mode);
+  }
+
+  public Observable<AuthResult> signIn(String email, String password) {
+    return RxSupport.from(firebase.signInWithEmailAndPassword(email, password));
+  }
+
+  public Observable<AuthResult> signIn(AuthCredential credential) {
+    return RxSupport.from(firebase.signInWithCredential(credential));
+  }
+
+  public Observable<AuthResult> signIn(String token) {
+    return RxSupport.from(firebase.signInWithCustomToken(token));
+  }
+
+  public Observable<AuthResult> signIn() {
+    return RxSupport.from(firebase.signInAnonymously());
+  }
+
+  public Observable<AuthResult> createUser(String email, String password) {
+    return RxSupport.from(firebase.createUserWithEmailAndPassword(email, password));
   }
 
   public Observable<FirebaseUser> getUser() {
@@ -77,7 +98,7 @@ public final class RxFirebaseAuth {
   public Observable<Void> updateEmail(final String email) {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
       @Override public Observable<Void> call(FirebaseUser user) {
-        return RxUtils.from(user.updateEmail(email), mode);
+        return RxSupport.from(user.updateEmail(email), mode);
       }
     });
   }
@@ -85,7 +106,7 @@ public final class RxFirebaseAuth {
   public Observable<Void> updatePassword(final String email) {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
       @Override public Observable<Void> call(FirebaseUser user) {
-        return RxUtils.from(user.updatePassword(email), mode);
+        return RxSupport.from(user.updatePassword(email), mode);
       }
     });
   }
@@ -93,19 +114,35 @@ public final class RxFirebaseAuth {
   public Observable<Void> updateProfile(final UserProfileChangeRequest request) {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
       @Override public Observable<Void> call(FirebaseUser user) {
-        return RxUtils.from(user.updateProfile(request), mode);
+        return RxSupport.from(user.updateProfile(request), mode);
       }
     });
   }
 
   public Observable<Void> sendPasswordResetEmail(final String email) {
-    return RxUtils.from(firebase.sendPasswordResetEmail(email));
+    return RxSupport.from(firebase.sendPasswordResetEmail(email));
   }
 
   public Observable<Void> delete() {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
       @Override public Observable<Void> call(FirebaseUser user) {
-        return RxUtils.from(user.delete());
+        return RxSupport.from(user.delete());
+      }
+    });
+  }
+
+  public Observable<AuthResult> link(final AuthCredential credential) {
+    return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<AuthResult>>() {
+      @Override public Observable<AuthResult> call(FirebaseUser user) {
+        return RxSupport.from(user.linkWithCredential(credential));
+      }
+    });
+  }
+
+  public Observable<AuthResult> unlink(final String providerId) {
+    return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<AuthResult>>() {
+      @Override public Observable<AuthResult> call(FirebaseUser user) {
+        return RxSupport.from(user.unlink(providerId));
       }
     });
   }
@@ -113,8 +150,12 @@ public final class RxFirebaseAuth {
   public Observable<Void> reauthenticate(final AuthCredential credentials) {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<Void>>() {
       @Override public Observable<Void> call(FirebaseUser user) {
-        return RxUtils.from(user.reauthenticate(credentials));
+        return RxSupport.from(user.reauthenticate(credentials));
       }
     });
+  }
+
+  public void signOut() {
+    firebase.signOut();
   }
 }
