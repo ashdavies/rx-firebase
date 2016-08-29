@@ -34,23 +34,23 @@ public final class RxFirebaseAuth {
     return new RxFirebaseAuth(firebase, mode);
   }
 
-  public Observable<AuthResult> signIn(String email, String password) {
+  public Observable<AuthResult> signInWithEmailAndPassword(String email, String password) {
     return RxSupport.from(firebase.signInWithEmailAndPassword(email, password));
   }
 
-  public Observable<AuthResult> signIn(AuthCredential credential) {
+  public Observable<AuthResult> signInWithCredential(AuthCredential credential) {
     return RxSupport.from(firebase.signInWithCredential(credential));
   }
 
-  public Observable<AuthResult> signIn(String token) {
+  public Observable<AuthResult> signInWithCustomToken(String token) {
     return RxSupport.from(firebase.signInWithCustomToken(token));
   }
 
-  public Observable<AuthResult> signIn() {
+  public Observable<AuthResult> signInAnonymously() {
     return RxSupport.from(firebase.signInAnonymously());
   }
 
-  public Observable<AuthResult> createUser(String email, String password) {
+  public Observable<AuthResult> createUserWithEmailAndPassword(String email, String password) {
     return RxSupport.from(firebase.createUserWithEmailAndPassword(email, password));
   }
 
@@ -131,7 +131,7 @@ public final class RxFirebaseAuth {
     });
   }
 
-  public Observable<AuthResult> link(final AuthCredential credential) {
+  public Observable<AuthResult> linkWithCredential(final AuthCredential credential) {
     return getCurrentUser().flatMap(new Func1<FirebaseUser, Observable<AuthResult>>() {
       @Override public Observable<AuthResult> call(FirebaseUser user) {
         return RxSupport.from(user.linkWithCredential(credential));

@@ -2,8 +2,8 @@ package io.ashdavies.rxfirebase.auth;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import rx.AsyncEmitter;
@@ -22,12 +22,10 @@ public final class RxSupport {
   public static <T> Observable<T> from(final Task<T> task, final AsyncEmitter.BackpressureMode mode) {
     return Observable.fromAsync(new Action1<AsyncEmitter<T>>() {
       @Override public void call(final AsyncEmitter<T> emitter) {
-        task.addOnCompleteListener(new OnCompleteListener<T>() {
-          @Override public void onComplete(@NonNull Task<T> task) {
-            if (task.isSuccessful()) {
-              emitter.onNext(task.getResult());
-              emitter.onCompleted();
-            }
+        task.addOnSuccessListener(new OnSuccessListener<T>() {
+          @Override public void onSuccess(T t) {
+            emitter.onNext(task.getResult());
+            emitter.onCompleted();
           }
         });
 
