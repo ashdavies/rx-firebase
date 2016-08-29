@@ -1,17 +1,13 @@
 buildscript {
   repositories {
     jcenter()
-
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
   }
 
   dependencies {
     classpath 'com.android.tools.build:gradle:2.1.2'
     classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
     classpath 'com.novoda:bintray-release:0.3.4'
-    classpath 'com.github.sherter.googlejavaformatgradleplugin:google-java-format-gradle-plugin:0.4-SNAPSHOT'
   }
 }
 
@@ -22,8 +18,6 @@ repositories {
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 apply plugin: 'jacoco-android'
-
-apply plugin: 'com.github.sherter.google-java-format'
 
 android {
   compileSdkVersion 24
@@ -41,17 +35,6 @@ android {
 
     versionCode 1
     versionName project.version
-  }
-
-  dexOptions {
-    incremental true
-    javaMaxHeapSize "4g"
-  }
-
-  lintOptions {
-    abortOnError false
-    checkReleaseBuilds false
-    disable 'InvalidPackage'
   }
 }
 
