@@ -1,46 +1,56 @@
 buildscript {
-  repositories {
-    jcenter()
-  }
+    repositories {
+        jcenter()
+    }
 
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.1.2'
-  }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
+        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.guava:guava:20.0'
+    }
 }
 
 apply plugin: 'com.android.application'
 
+apply from: '../versions.gradle'
+
 android {
-  compileSdkVersion 24
-  buildToolsVersion '24.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
-  defaultConfig {
-    applicationId 'io.ashdavies.sample'
+    defaultConfig {
+        applicationId 'io.ashdavies.sample'
 
-    minSdkVersion 19
-    targetSdkVersion 24
+        jackOptions {
+            enabled true
+        }
 
-    versionCode 1
-    versionName '1.0'
-  }
+        minSdkVersion 21
+        targetSdkVersion 25
 
-  dexOptions {
-    incremental true
-    javaMaxHeapSize "4g"
-  }
+        versionCode 1
+        versionName project.version
+    }
 
-  lintOptions {
-    abortOnError false
-    checkReleaseBuilds false
-    disable 'InvalidPackage'
-  }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
-  compile project(':library')
+    compile project(':library')
 
-  compile 'com.android.support:appcompat-v7:24.1.1'
+    compile "com.android.support:appcompat-v7:$versions.appCompatV7"
 
-  compile 'io.reactivex:rxjava:1.1.8'
-  compile 'io.reactivex:rxandroid:1.2.1'
+    compile "com.google.firebase:firebase-core:$versions.firebase"
+    compile "com.google.firebase:firebase-auth:$versions.firebase"
+
+    compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+    compile "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
 }

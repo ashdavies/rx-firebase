@@ -1,76 +1,64 @@
 buildscript {
-  repositories {
-    jcenter()
+    repositories {
+        jcenter()
+    }
 
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-  }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
+        classpath 'com.google.gms:google-services:3.0.0'
 
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.1.2'
-    classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-    classpath 'com.novoda:bintray-release:0.3.4'
-    classpath 'com.github.sherter.googlejavaformatgradleplugin:google-java-format-gradle-plugin:0.4-SNAPSHOT'
-  }
-}
-
-repositories {
-  jcenter()
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 apply plugin: 'jacoco-android'
 
-apply plugin: 'com.github.sherter.google-java-format'
+apply from: '../versions.gradle'
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion '24.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
-  buildTypes {
-    debug {
-      testCoverageEnabled true
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
     }
-  }
 
-  defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 24
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 25
 
-    versionCode 1
-    versionName project.version
-  }
+        versionCode 1
+        versionName project.version
+    }
 
-  dexOptions {
-    incremental true
-    javaMaxHeapSize "4g"
-  }
-
-  lintOptions {
-    abortOnError false
-    checkReleaseBuilds false
-    disable 'InvalidPackage'
-  }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.firebase:firebase-client-android:2.5.2'
+    compile "io.ashdavies.rx:rxtasks:$versions.rxTasks"
+    compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
 
-  compile 'io.reactivex:rxjava:1.1.8'
+    compile "com.google.firebase:firebase-core:$versions.firebase"
+    compile "com.google.firebase:firebase-auth:$versions.firebase"
+    compile "com.google.firebase:firebase-database:$versions.firebase"
 
-  testCompile 'junit:junit:4.12'
-  testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile "com.google.truth:truth:$versions.truth"
+    testCompile "org.mockito:mockito-core:$versions.mockito"
 }
 
 publish {
-  userOrg = 'ashdavies'
-  groupId = 'io.ashdavies'
-  artifactId = 'rxfirebase'
+    userOrg = 'ashdavies'
+    groupId = 'io.ashdavies.rx'
+    artifactId = 'rxfirebase'
 
-  version = project.version
-  description = 'RxFirebase'
-  website = 'https://github.com/ashdavies/rxfirebase'
+    version = project.version
+    description = 'Reactive Java wrapper for use get the Android Firebase client'
+    website = 'https://github.com/ashdavies/RxFirebase'
 }
