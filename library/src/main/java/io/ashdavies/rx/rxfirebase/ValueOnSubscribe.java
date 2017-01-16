@@ -1,5 +1,7 @@
 package io.ashdavies.rx.rxfirebase;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.database.DatabaseReference;
 
 import io.reactivex.CompletableEmitter;
@@ -8,14 +10,19 @@ import io.reactivex.CompletableOnSubscribe;
 class ValueOnSubscribe implements CompletableOnSubscribe {
 
   private final DatabaseReference reference;
-
   private final Object value;
+
+  @Nullable
   private final Object priority;
 
-  ValueOnSubscribe(DatabaseReference reference, Object value, Object priority) {
-    this.reference = reference;
+  ValueOnSubscribe(DatabaseReference reference, Object value) {
+    this(reference, value, null);
+  }
 
+  ValueOnSubscribe(DatabaseReference reference, Object value, @Nullable Object priority) {
+    this.reference = reference;
     this.value = value;
+
     this.priority = priority;
   }
 

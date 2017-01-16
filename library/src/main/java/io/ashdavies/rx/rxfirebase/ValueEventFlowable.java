@@ -8,19 +8,17 @@ import com.google.firebase.database.ValueEventListener;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.functions.Cancellable;
 
-class ValueEventFlowable<T> implements ValueEventListener, TypeCancellable<Query> {
+class ValueEventFlowable implements ValueEventListener, TypeCancellable<Query> {
 
-  private final FlowableEmitter<T> emitter;
-  private final SnapshotResolver<T> resolver;
+  private final FlowableEmitter<DataSnapshot> emitter;
 
-  ValueEventFlowable(FlowableEmitter<T> emitter, SnapshotResolver<T> resolver) {
+  ValueEventFlowable(FlowableEmitter<DataSnapshot> emitter) {
     this.emitter = emitter;
-    this.resolver = resolver;
   }
 
   @Override
   public void onDataChange(DataSnapshot snapshot) {
-    emitter.onNext(resolver.resolve(snapshot));
+    emitter.onNext(snapshot);
   }
 
   @Override

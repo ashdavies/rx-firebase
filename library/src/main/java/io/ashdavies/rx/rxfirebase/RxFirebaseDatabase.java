@@ -1,5 +1,8 @@
 package io.ashdavies.rx.rxfirebase;
 
+import android.support.annotation.Nullable;
+
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 
@@ -28,16 +31,16 @@ public class RxFirebaseDatabase {
     return setValue(value, null);
   }
 
-  public Completable setValue(Object value, Object priority) {
+  public Completable setValue(Object value, @Nullable Object priority) {
     return Completable.create(new ValueOnSubscribe(database.getReference(), value, priority));
   }
 
-  public <T> Flowable<T> onValueEvent(String path, SnapshotResolver<T> resolver) {
-    return Flowable.create(new ValueEventOnSubscribe<>(database.getReference(path), resolver), FlowableEmitter.BackpressureMode.BUFFER);
+  public Flowable<DataSnapshot> onValueEvent(String path) {
+    return Flowable.create(new ValueEventOnSubscribe(database.getReference(path)), FlowableEmitter.BackpressureMode.BUFFER);
   }
 
-  public <T> Single<T> onSingleValueEvent(String path, SnapshotResolver<T> resolver) {
-    return Single.create(new SingleValueEventOnSubscribe<>(database.getReference(path), resolver));
+  public Single<DataSnapshot> onSingleValueEvent(String path) {
+    return Single.create(new SingleValueEventOnSubscribe(database.getReference(path)));
   }
 
   public Flowable<ChildEvent> onChildEvent(String path) {

@@ -3,8 +3,6 @@ package io.ashdavies.sample;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-
 import io.ashdavies.rx.rxfirebase.RxFirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void init() {
-    RxFirebaseDatabase.getInstance()
-        .getReference("articles", DataSnapshot::getValue);
+    RxFirebaseDatabase.getInstance().onChildAdded("articles");
   }
 }

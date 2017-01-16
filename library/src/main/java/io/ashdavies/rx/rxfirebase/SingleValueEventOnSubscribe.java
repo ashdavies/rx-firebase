@@ -1,23 +1,22 @@
 package io.ashdavies.rx.rxfirebase;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 
-class SingleValueEventOnSubscribe<T> implements SingleOnSubscribe<T> {
+class SingleValueEventOnSubscribe implements SingleOnSubscribe<DataSnapshot> {
 
   private final Query query;
-  private final SnapshotResolver<T> resolver;
 
-  SingleValueEventOnSubscribe(Query query, SnapshotResolver<T> resolver) {
+  SingleValueEventOnSubscribe(Query query) {
     this.query = query;
-    this.resolver = resolver;
   }
 
   @Override
-  public void subscribe(SingleEmitter<T> emitter) throws Exception {
-    ValueEventSingle<T> listener = new ValueEventSingle<>(emitter, resolver);
+  public void subscribe(SingleEmitter<DataSnapshot> emitter) throws Exception {
+    ValueEventSingle listener = new ValueEventSingle(emitter);
     emitter.setCancellable(listener.cancellable(query));
     query.addListenerForSingleValueEvent(listener);
   }
