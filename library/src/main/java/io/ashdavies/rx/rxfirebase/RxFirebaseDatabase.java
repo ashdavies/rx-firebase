@@ -1,9 +1,7 @@
 package io.ashdavies.rx.rxfirebase;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
-import com.google.firebase.database.Query;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
@@ -26,23 +24,6 @@ public class RxFirebaseDatabase {
     return new RxFirebaseDatabase(database);
   }
 
-  public <T> Flowable<T> getReference(SnapshotResolver<T> resolver) {
-    return flowable(database.getReference(), resolver);
-  }
-
-  public <T> Flowable<T> getReference(String string, SnapshotResolver<T> resolver) {
-    return flowable(database.getReference(string), resolver);
-  }
-
-  public <T> Flowable<T> getReferenceFromUrl(String string, SnapshotResolver<T> resolver) {
-    return flowable(database.getReferenceFromUrl(string), resolver);
-  }
-
-  private <T> Flowable<T> flowable(Query query, final SnapshotResolver<T> resolver) {
-    return Flowable.create(new ChildEventOnSubscribe(query), FlowableEmitter.BackpressureMode.BUFFER)
-        .map(new ChildEventResolver<>(resolver));
-  }
-
   public Completable setValue(Object value) {
     return setValue(value, null);
   }
@@ -51,11 +32,11 @@ public class RxFirebaseDatabase {
     return Completable.create(new ValueOnSubscribe(database.getReference(), value, priority));
   }
 
-  public Flowable<DataSnapshot> onValueEvent(String path, SnapshotResolver<DataSnapshot> resolver) {
+  public <T> Flowable<T> onValueEvent(String path, SnapshotResolver<T> resolver) {
     return Flowable.create(new ValueEventOnSubscribe<>(database.getReference(path), resolver), FlowableEmitter.BackpressureMode.BUFFER);
   }
 
-  public Single<DataSnapshot> onSingleValueEvent(String path, SnapshotResolver<DataSnapshot> resolver) {
+  public <T> Single<T> onSingleValueEvent(String path, SnapshotResolver<T> resolver) {
     return Single.create(new SingleValueEventOnSubscribe<>(database.getReference(path), resolver));
   }
 

@@ -1,6 +1,6 @@
 ext.versions = [
 
-        'rxTasks'    : '1.1.0',
+        'rxTasks'    : '1.1.1',
         'firebase'   : '10.0.1',
         'rxJava'     : '2.0.0-RC2',
 
