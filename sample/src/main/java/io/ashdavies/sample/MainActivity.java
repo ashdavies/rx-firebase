@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void init() {
-    RxFirebaseDatabase.getInstance().onChildAdded("articles");
+    RxFirebaseDatabase.getInstance().onChildAdded("articles")
+        .subscribe();
   }
 }

@@ -5,11 +5,11 @@ import com.google.firebase.database.DatabaseReference;
 
 import io.reactivex.CompletableEmitter;
 
-class ValueCompletionCompletable implements DatabaseReference.CompletionListener {
+class SetValueCompletionCompletable implements DatabaseReference.CompletionListener {
 
   private final CompletableEmitter emitter;
 
-  ValueCompletionCompletable(CompletableEmitter emitter) {
+  SetValueCompletionCompletable(CompletableEmitter emitter) {
     this.emitter = emitter;
   }
 

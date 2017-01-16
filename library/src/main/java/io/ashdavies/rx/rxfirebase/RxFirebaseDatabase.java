@@ -32,7 +32,7 @@ public class RxFirebaseDatabase {
   }
 
   public Completable setValue(Object value, @Nullable Object priority) {
-    return Completable.create(new ValueOnSubscribe(database.getReference(), value, priority));
+    return Completable.create(new SetValueOnSubscribe(database.getReference(), value, priority));
   }
 
   public Flowable<DataSnapshot> onValueEvent(String path) {
