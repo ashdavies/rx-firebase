@@ -16,14 +16,11 @@ apply from: '../versions.gradle'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId 'io.ashdavies.sample'
 
-        jackOptions {
-            enabled true
-        }
 
         minSdkVersion 21
         targetSdkVersion 25
@@ -54,3 +51,6 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
     compile "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
 }
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7

@@ -20,7 +20,7 @@ apply from: '../versions.gradle'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
 
     buildTypes {
         debug {
@@ -62,3 +62,6 @@ publish {
     description = 'Reactive Java wrapper for use with the Android Firebase client'
     website = 'https://github.com/ashdavies/rx-firebase'
 }
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
