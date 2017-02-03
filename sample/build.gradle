@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
+        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.google.guava:guava:20.0'
     }
@@ -12,7 +12,7 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
-apply from: '../versions.gradle'
+apply from: '../dependencies.gradle'
 
 android {
     compileSdkVersion 25
@@ -21,6 +21,9 @@ android {
     defaultConfig {
         applicationId 'io.ashdavies.sample'
 
+        jackOptions {
+            enabled true
+        }
 
         minSdkVersion 21
         targetSdkVersion 25
@@ -43,14 +46,21 @@ android {
 dependencies {
     compile project(':library')
 
-    compile "com.android.support:appcompat-v7:$versions.appCompatV7"
+    compile libraries.androidCommons
 
-    compile "com.google.firebase:firebase-core:$versions.firebase"
-    compile "com.google.firebase:firebase-auth:$versions.firebase"
+    compile libraries.androidSupport.design
+    compile libraries.androidSupport.appCompat
+    compile libraries.androidSupport.recyclerView
 
-    compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
-    compile "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+    compile libraries.butterknife.core
+    annotationProcessor libraries.butterknife.compiler
+
+    compile libraries.firebase.core
+    compile libraries.firebase.auth
+    compile libraries.firebase.database
+
+    compile libraries.rxJava
+    compile libraries.rxAndroid
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
+apply plugin: 'com.google.gms.google-services'

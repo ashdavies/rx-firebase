@@ -1,0 +1,57 @@
+ext {
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+
+    versions = [
+            'annotations'   : [
+                    'jsr305': '3.0.1'
+            ],
+
+            'androidCommons': '0.5.6',
+            'androidSupport': '25.1.1',
+
+            'rxAndroid'     : '2.0.0-RC1',
+            'rxJava'        : '2.0.0-RC2',
+            'rxTasks'       : '1.1.1',
+
+            'firebase'      : '10.0.1',
+
+            'butterknife'   : '8.5.1',
+
+            'truth'         : '0.30',
+            'mockito'       : '1.10.19'
+    ]
+
+    libraries = [
+            'annotations'   : [
+                    'jsr305': "com.google.code.findbugs:jsr305:$versions.annotations.jsr305"
+            ],
+
+            'androidCommons': "io.ashdavies:commons-android:$versions.androidCommons",
+            'androidSupport': [
+                    'design'      : "com.android.support:design:$versions.androidSupport",
+                    'appCompat'   : "com.android.support:appcompat-v7:$versions.androidSupport",
+                    'recyclerView': "com.android.support:recyclerview-v7:$versions.androidSupport"
+            ],
+
+            'butterknife'   : [
+                    'core'    : "com.jakewharton:butterknife:$versions.butterknife",
+                    'compiler': "com.jakewharton:butterknife-compiler:$versions.butterknife"
+
+            ],
+
+            'rxAndroid'     : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+            'rxJava'        : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+            'rxTasks'       : "io.ashdavies.rx:rx-tasks:$versions.rxTasks",
+
+            'firebase'      : [
+                    'core'    : "com.google.firebase:firebase-core:$versions.firebase",
+                    'auth'    : "com.google.firebase:firebase-auth:$versions.firebase",
+                    'database': "com.google.firebase:firebase-database:$versions.firebase"
+            ],
+
+            'truth'         : "com.google.truth:truth:$versions.truth",
+            'mockito'       : "org.mockito:mockito-core:$versions.mockito"
+    ]
+}

@@ -1,90 +1,126 @@
 package io.ashdavies.rx.rxfirebase;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 
+import java.util.Map;
+
+import io.ashdavies.rx.rxtasks.RxTasks;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Single;
 
 @SuppressWarnings("WeakerAccess")
-public class RxFirebaseDatabase {
-  private final FirebaseDatabase database;
+public final class RxFirebaseDatabase {
 
-  private RxFirebaseDatabase(FirebaseDatabase database) {
-    this.database = database;
+  private final DatabaseReference reference;
+
+  private RxFirebaseDatabase(DatabaseReference reference) {
+    this.reference = reference;
   }
 
   public static RxFirebaseDatabase getInstance() {
-    return getInstance(FirebaseDatabase.getInstance());
+    return getInstance(FirebaseDatabase.getInstance().getReference());
   }
 
-  public static RxFirebaseDatabase getInstance(FirebaseDatabase database) {
-    return new RxFirebaseDatabase(database);
+  public static RxFirebaseDatabase getInstance(String path) {
+    return getInstance(FirebaseDatabase.getInstance().getReference(path));
   }
 
+  public static RxFirebaseDatabase getInstance(DatabaseReference reference) {
+    return new RxFirebaseDatabase(reference);
+  }
+
+  public RxFirebaseDatabase onChild(String path) {
+    return new RxFirebaseDatabase(reference.child(path));
+  }
+
+  public RxFirebaseDatabase onParent() {
+    return new RxFirebaseDatabase(reference.getParent());
+  }
+
+  public RxFirebaseDatabase onRoot() {
+    return new RxFirebaseDatabase(reference.getRoot());
+  }
+
+  @CheckResult
+  public Completable setPriority(Object object) {
+    return RxTasks.completable(reference.setPriority(object));
+  }
+
+  @CheckResult
   public Completable setValue(Object value) {
     return setValue(value, null);
   }
 
+  @CheckResult
   public Completable setValue(Object value, @Nullable Object priority) {
-    return Completable.create(new SetValueOnSubscribe(database.getReference(), value, priority));
+    return Completable.create(new SetValueOnSubscribe(reference, value, priority));
   }
 
-  public Flowable<DataSnapshot> onValueEvent(String path) {
-    return Flowable.create(new ValueEventOnSubscribe(database.getReference(path)), FlowableEmitter.BackpressureMode.BUFFER);
+  @CheckResult
+  public Completable updateChildren(Map<String, Object> map) {
+    return RxTasks.completable(reference.updateChildren(map));
   }
 
-  public Single<DataSnapshot> onSingleValueEvent(String path) {
-    return Single.create(new SingleValueEventOnSubscribe(database.getReference(path)));
+  @CheckResult
+  public Completable removeValue() {
+    return RxTasks.completable(reference.removeValue());
   }
 
-  public Flowable<ChildEvent> onChildEvent(String path) {
-    return Flowable.create(new ChildEventOnSubscribe(database.getReference(path)), FlowableEmitter.BackpressureMode.BUFFER);
+  @CheckResult
+  public Flowable<DataSnapshot> onValueEvent() {
+    return Flowable.create(new ValueEventOnSubscribe(reference), FlowableEmitter.BackpressureMode.BUFFER);
   }
 
-  public final Flowable<ChildEvent> onChildAdded(String path) {
-    return onChildEvent(path).filter(new ChildEventTypePredicate(ChildEvent.Type.CHILD_ADDED));
+  @CheckResult
+  public Single<DataSnapshot> onSingleValueEvent() {
+    return Single.create(new SingleValueEventOnSubscribe(reference));
   }
 
-  public final Flowable<ChildEvent> onChildChanged(String path) {
-    return onChildEvent(path).filter(new ChildEventTypePredicate(ChildEvent.Type.CHILD_CHANGED));
+  @CheckResult
+  public Flowable<ChildEvent> onChildEvent() {
+    return Flowable.create(new ChildEventOnSubscribe(reference), FlowableEmitter.BackpressureMode.BUFFER);
   }
 
-  public final Flowable<ChildEvent> onChildRemoved(String path) {
-    return onChildEvent(path).filter(new ChildEventTypePredicate(ChildEvent.Type.CHILD_REMOVED));
+  @CheckResult
+  public Flowable<ChildEvent> onChildEvent(ChildEvent.Type childEventType) {
+    return onChildEvent().filter(new ChildEventTypePredicate(childEventType));
   }
 
-  public final Flowable<ChildEvent> onChildMoved(String path) {
-    return onChildEvent(path).filter(new ChildEventTypePredicate(ChildEvent.Type.CHILD_MOVED));
+  @CheckResult
+  public <T> Flowable<T> onChildEventValue(ChildEvent.Type childEventType, Class<T> kls) {
+    return onChildEvent(childEventType).compose(new ChildEventClassTransformer<>(kls));
   }
 
   public RxFirebaseDatabase purgeOutstandingWrites() {
-    database.purgeOutstandingWrites();
+    reference.getDatabase().purgeOutstandingWrites();
     return this;
   }
 
   public RxFirebaseDatabase goOnline() {
-    database.goOnline();
+    reference.getDatabase().goOnline();
     return this;
   }
 
   public RxFirebaseDatabase goOffline() {
-    database.goOffline();
+    reference.getDatabase().goOffline();
     return this;
   }
 
   public RxFirebaseDatabase setLogLevel(Logger.Level level) {
-    database.setLogLevel(level);
+    reference.getDatabase().setLogLevel(level);
     return this;
   }
 
   public RxFirebaseDatabase setPersistenceEnabled(boolean enabled) {
-    database.setPersistenceEnabled(enabled);
+    reference.getDatabase().setPersistenceEnabled(enabled);
     return this;
   }
 }
