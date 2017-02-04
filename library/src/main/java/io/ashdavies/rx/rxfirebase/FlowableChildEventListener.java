@@ -9,6 +9,7 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.functions.Cancellable;
 
 class FlowableChildEventListener implements ChildEventListener, TypeCancellable<Query> {
+
   private final FlowableEmitter<ChildEvent> emitter;
 
   FlowableChildEventListener(FlowableEmitter<ChildEvent> emitter) {

@@ -1,7 +1,7 @@
 ### Android RxFirebase
-![Build Status](https://img.shields.io/travis/ashdavies/android-rx-firebase.svg)
-![Coverage](https://img.shields.io/codecov/c/github/ashdavies/android-rx-firebase.svg)
-![Version](https://img.shields.io/badge/version-1.2.0-yellowgreen.svg)
+![Build Status](https://img.shields.io/travis/ashdavies/rx-firebase.svg)
+![Coverage](https://img.shields.io/codecov/c/github/ashdavies/rx-firebase.svg)
+![Version](https://img.shields.io/badge/version-1.2.1-yellowgreen.svg)
 ![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)
 
 **RxJava wrapper for use with the Android Firebase client**

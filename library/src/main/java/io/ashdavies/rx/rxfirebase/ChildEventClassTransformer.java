@@ -16,12 +16,20 @@ class ChildEventClassTransformer<T> implements FlowableTransformer<ChildEvent, T
 
   @Override
   public Publisher<? extends T> apply(Flowable<ChildEvent> source) throws Exception {
-    return source.map(new Function<ChildEvent, T>() {
+    return source.map(new Mapper<>(kls));
+  }
 
-      @Override
-      public T apply(ChildEvent event) throws Exception {
-        return event.snapshot().getValue(kls);
-      }
-    });
+  private static class Mapper<T> implements Function<ChildEvent, T> {
+
+    private final Class<T> kls;
+
+    Mapper(Class<T> kls) {
+      this.kls = kls;
+    }
+
+    @Override
+    public T apply(ChildEvent event) throws Exception {
+      return event.snapshot().getValue(kls);
+    }
   }
 }
