@@ -29,12 +29,31 @@ This library depends on `RxTasks` and `RxJava2` to provide appropriate api respo
 Therefore asynchronous responses will return, `Single`, `Completable` and `Flowable` respectively.
 
 #### Usage
-Many of the operations can be referenced in further detail in the [official documentation](https://firebase.google.com/docs/).
+Many of the operations can be referenced in further detail in the
+[official documentation](https://firebase.google.com/docs/).
+
+An instance of either `RxFirebaseAuth` or `RxFirebaseDatabase` can be retrieved using their 
+respective `getInstance` method, which will then use the default Firebase element. Alternatively 
+this can also be provided as a parameter should you wish to use a custom one.
 
 ##### RxFirebaseAuth
-Retrieve an instance with `RxFirebaseAuth.getInstance()` which will use `FirebaseAuth.getInstance()`,
-you can also provide an alternative `FirebaseAuth` with this `RxFirebaseAuth.getInstance(firebaseAuth)`.
+RxFirebaseAuth has a fairly mirrored api to that of `FirebaseAuth` and can in most cases be used
+as a drop in replacement. Methods which have no return value will return the instance so that
+methods can be chained.
 
-#### RxFirebaseDatabase
-Retrieve an instance with `RxFirebaseDatabase.getInstance()` which will use `FirebaseDatabase.getInstance()`,
-you can also provide an alternative `FirebaseDatabase` with this `RxFirebaseDatabase.getInstance(firebaseDatabase)`.
+Calls to `getCurrentUser()` will return a Maybe emitting the user only if the user is logged in
+otherwise it will just call `onComplete` immediately.
+
+
+##### RxFirebaseDatabase
+RxFirebaseDatabase has a simple interface which also mimics that of its Firebase counterpart, at
+this time it is not worthwhile to facilitate all the features available via the Query interface
+therefore it is possible to use a `Query` object with `RxFirebaseDatabase.with(query)`.
+
+The main responsibility of `RxFirebaseDatabase` is to be able to consume child and value events
+using reactive extensions, such as retrieving values, setting and removing values.
+
+One of the main observations here is the consumption of child events, this is achieved through
+the use of the `ChildEvent` object which has reference to the event type, and data snapshot which
+can then be used to resolve the data value.
+

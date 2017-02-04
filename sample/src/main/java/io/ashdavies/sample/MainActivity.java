@@ -47,7 +47,7 @@ public class MainActivity extends AbstractActivity {
   }
 
   private Flowable<UserEntity> getUserStream() {
-    return RxFirebaseDatabase.getInstance(CUSTOMERS).limit(100)
+    return RxFirebaseDatabase.getInstance(CUSTOMERS)
         .onChildEventValue(ChildEvent.Type.CHILD_ADDED, UserEntity.class);
   }
 

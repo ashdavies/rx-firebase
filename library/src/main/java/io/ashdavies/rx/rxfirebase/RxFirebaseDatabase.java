@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
+import com.google.firebase.database.Query;
 
 import java.util.Map;
 
@@ -37,20 +38,8 @@ public final class RxFirebaseDatabase {
     return new RxFirebaseDatabase(reference);
   }
 
-  public RxFirebaseDatabase onChild(String path) {
-    return new RxFirebaseDatabase(reference.child(path));
-  }
-
-  public RxFirebaseDatabase onParent() {
-    return new RxFirebaseDatabase(reference.getParent());
-  }
-
-  public RxFirebaseDatabase onRoot() {
-    return new RxFirebaseDatabase(reference.getRoot());
-  }
-
-  public RxFirebaseDatabase limit(int size) {
-    return new RxFirebaseDatabase(reference.limitToFirst(size).getRef());
+  public static RxFirebaseDatabase with(Query query) {
+    return getInstance(query.getRef());
   }
 
   @CheckResult
