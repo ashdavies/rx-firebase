@@ -49,6 +49,10 @@ public final class RxFirebaseDatabase {
     return new RxFirebaseDatabase(reference.getRoot());
   }
 
+  public RxFirebaseDatabase limit(int size) {
+    return new RxFirebaseDatabase(reference.limitToFirst(size).getRef());
+  }
+
   @CheckResult
   public Completable setPriority(Object object) {
     return RxTasks.completable(reference.setPriority(object));

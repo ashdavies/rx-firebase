@@ -13,13 +13,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.ashdavies.commons.activity.AbstractActivity;
 import io.ashdavies.commons.adapter.DividerItemDecoration;
+import io.ashdavies.rx.rxfirebase.ChildEvent;
+import io.ashdavies.rx.rxfirebase.RxFirebaseAuth;
 import io.ashdavies.rx.rxfirebase.RxFirebaseDatabase;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AbstractActivity {
 
   private static final String CUSTOMERS = "customers";
-  private static final String USERS = "users";
 
   private UserAdapter adapter;
 
@@ -38,24 +40,21 @@ public class MainActivity extends AbstractActivity {
     recycler.setLayoutManager(new LinearLayoutManager(this));
     recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-    disposable = RxFirebaseDatabase.getInstance(USERS)
-        .onChildAdded()
-        .map(childEvent -> childEvent.snapshot().getValue(UserEntity.class))
-        //.doOnNext(this::createCustomerEntry)
+    disposable = RxFirebaseAuth.getInstance()
+        .signInAnonymously()
+        .flatMapPublisher(result -> getUserStream())
         .subscribe(adapter::addItem, this::onError);
+  }
+
+  private Flowable<UserEntity> getUserStream() {
+    return RxFirebaseDatabase.getInstance(CUSTOMERS).limit(100)
+        .onChildEventValue(ChildEvent.Type.CHILD_ADDED, UserEntity.class);
   }
 
   @Override
   public void setContentView(@LayoutRes int layoutResId) {
     super.setContentView(layoutResId);
     unbinder = ButterKnife.bind(this);
-  }
-
-  private void createCustomerEntry(UserEntity user) {
-    RxFirebaseDatabase.getInstance()
-        .setValue(user)
-        .subscribe(() -> {
-        }, this::onError);
   }
 
   @Override

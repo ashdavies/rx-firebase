@@ -33,9 +33,9 @@ class UserAdapter extends AbstractAdapter<UserAdapter.Holder, UserEntity> {
 
     @Override
     protected void bind(UserEntity user) {
-      name.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
-      company.setText(user.getCompanyName());
-      email.setText(user.getEmail());
+      name.setText(String.format("%s %s", user.firstName, user.lastName));
+      company.setText(user.companyName);
+      email.setText(user.email);
     }
   }
 }
