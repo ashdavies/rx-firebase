@@ -16,6 +16,7 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.functions.Cancellable;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +42,7 @@ public class ChildEventOnSubscribeTest {
 
     captor.getValue().onChildAdded(snapshot, null);
 
-    ArgumentCaptor<ChildEvent> captor = ArgumentCaptor.forClass(ChildEvent.class);
+    ArgumentCaptor<ChildEvent> captor = forClass(ChildEvent.class);
     verify(emitter).onNext(captor.capture());
 
     ChildEvent event = captor.getValue();
@@ -51,7 +52,7 @@ public class ChildEventOnSubscribeTest {
 
   @Test
   public void shouldRemoveChildEventListenerOnCancel() throws Exception {
-    ArgumentCaptor<Cancellable> captor = ArgumentCaptor.forClass(Cancellable.class);
+    ArgumentCaptor<Cancellable> captor = forClass(Cancellable.class);
 
     onSubscribe.subscribe(emitter);
     verify(emitter).setCancellable(captor.capture());

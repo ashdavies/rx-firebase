@@ -14,6 +14,7 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.functions.Cancellable;
 
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,7 +44,7 @@ public class AuthStateOnSubscribeTest {
 
   @Test
   public void shouldRemoveAuthStateListenerOnCancel() throws Exception {
-    ArgumentCaptor<Cancellable> captor = ArgumentCaptor.forClass(Cancellable.class);
+    ArgumentCaptor<Cancellable> captor = forClass(Cancellable.class);
 
     onSubscribe.subscribe(emitter);
     verify(emitter).setCancellable(captor.capture());

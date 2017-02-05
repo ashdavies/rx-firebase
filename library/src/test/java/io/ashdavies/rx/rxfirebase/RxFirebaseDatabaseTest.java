@@ -21,6 +21,7 @@ import java.util.Map;
 
 import io.reactivex.subscribers.TestSubscriber;
 
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isNull;
@@ -117,7 +118,7 @@ public class RxFirebaseDatabaseTest {
 
   @Test
   public void shouldBufferChildEvents() throws Exception {
-    ArgumentCaptor<ChildEventListener> captor = ArgumentCaptor.forClass(ChildEventListener.class);
+    ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent().test(1);
     verify(reference).addChildEventListener(captor.capture());
 
@@ -134,7 +135,7 @@ public class RxFirebaseDatabaseTest {
 
   @Test
   public void shouldFilterChildEvent() throws Exception {
-    ArgumentCaptor<ChildEventListener> captor = ArgumentCaptor.forClass(ChildEventListener.class);
+    ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent(ChildEvent.Type.CHILD_ADDED).test();
     verify(reference).addChildEventListener(captor.capture());
 
@@ -151,7 +152,7 @@ public class RxFirebaseDatabaseTest {
 
   @Test
   public void shouldParseChildEventValue() throws Exception {
-    ArgumentCaptor<ChildEventListener> captor = ArgumentCaptor.forClass(ChildEventListener.class);
+    ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<String> subscriber = rx
         .onChildEventValue(ChildEvent.Type.CHILD_ADDED, String.class)
         .test();
