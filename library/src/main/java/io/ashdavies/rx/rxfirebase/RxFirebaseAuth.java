@@ -10,9 +10,9 @@ import com.google.firebase.auth.ProviderQueryResult;
 
 import io.ashdavies.rx.common.NullableMaybeOnSubscribe;
 import io.ashdavies.rx.rxtasks.RxTasks;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -34,7 +34,7 @@ public final class RxFirebaseAuth {
 
   @CheckResult
   public Flowable<FirebaseAuth> authStateChanged() {
-    return Flowable.create(new AuthStateOnSubscribe(auth), FlowableEmitter.BackpressureMode.BUFFER);
+    return Flowable.create(new AuthStateOnSubscribe(auth), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult

@@ -15,7 +15,7 @@ class SetValueCompletionCompletable implements DatabaseReference.CompletionListe
 
   @Override
   public void onComplete(DatabaseError error, DatabaseReference reference) {
-    if (emitter.isCancelled()) {
+    if (emitter.isDisposed()) {
       return;
     }
 

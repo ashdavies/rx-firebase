@@ -36,7 +36,7 @@ public class SetValueOnSubscribeTest {
 
   @Test
   public void shouldSetValueListener() throws Exception {
-    given(emitter.isCancelled()).willReturn(false);
+    given(emitter.isDisposed()).willReturn(false);
 
     onSubscribe.subscribe(emitter);
     verify(reference).setValue(eq(DIGESTIVES), isNull(), captor.capture());
