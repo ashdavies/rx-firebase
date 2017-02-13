@@ -9,7 +9,7 @@
 #### Installation
 ```gradle
 dependencies {
-  compile "io.ashdavies.rxfirebase:{latest-version}"
+  compile "io.ashdavies.rx:rx-firebase:{latest-version}"
 }
 ```
 
