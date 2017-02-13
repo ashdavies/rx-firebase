@@ -12,9 +12,9 @@ import com.google.firebase.database.Query;
 import java.util.Map;
 
 import io.ashdavies.rx.rxtasks.RxTasks;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
 import io.reactivex.Single;
 
 @SuppressWarnings("WeakerAccess")
@@ -69,7 +69,7 @@ public final class RxFirebaseDatabase {
 
   @CheckResult
   public Flowable<DataSnapshot> onValueEvent() {
-    return Flowable.create(new ValueEventOnSubscribe(reference), FlowableEmitter.BackpressureMode.BUFFER);
+    return Flowable.create(new ValueEventOnSubscribe(reference), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult
@@ -79,7 +79,7 @@ public final class RxFirebaseDatabase {
 
   @CheckResult
   public Flowable<ChildEvent> onChildEvent() {
-    return Flowable.create(new ChildEventOnSubscribe(reference), FlowableEmitter.BackpressureMode.BUFFER);
+    return Flowable.create(new ChildEventOnSubscribe(reference), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult

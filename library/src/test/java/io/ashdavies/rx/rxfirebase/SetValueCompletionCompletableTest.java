@@ -35,7 +35,7 @@ public class SetValueCompletionCompletableTest {
 
   @Test
   public void shouldNotEmitIfCancelled() throws Exception {
-    given(emitter.isCancelled()).willReturn(true);
+    given(emitter.isDisposed()).willReturn(true);
 
     completable.onComplete(null, reference);
     completable.onComplete(error, null);
