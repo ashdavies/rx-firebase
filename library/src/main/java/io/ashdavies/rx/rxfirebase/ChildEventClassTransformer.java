@@ -14,7 +14,8 @@ class ChildEventClassTransformer<T> implements FlowableTransformer<ChildEvent, T
     this.kls = kls;
   }
 
-  @Override public Publisher<T> apply(Flowable<ChildEvent> upstream) {
+  @Override
+  public Publisher<T> apply(Flowable<ChildEvent> upstream) {
     return upstream.map(new Mapper<>(kls));
   }
 

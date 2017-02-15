@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.2.3 *(2017-02-15)*
+----------------------------
+
+ * Update to latest RxJava versions
+ * Correct readme text
+ 
 Version 1.2.2 *(2017-02-05)*
 ----------------------------
 
