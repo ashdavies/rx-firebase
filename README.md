@@ -63,3 +63,4 @@ can then be used to resolve the data value.
 To run the example application, copy your own `google-services.json` from Firebase into
 the `sample` directory.
 An example database and read-only rule set are in `sample-database.json` and `sample-rules.json`.
+Anonymous Authentication will also need to be enabled.
