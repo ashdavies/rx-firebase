@@ -1,0 +1,24 @@
+{
+  "customers" : {
+    "james_example_co_uk" : {
+      "address" : "123 Fake St",
+      "company_name" : "Reactive Experts",
+      "country" : "United Kingdom",
+      "email" : "james@example.com",
+      "first_name" : "James",
+      "last_name" : "Customer",
+      "postal" : "SW1A 0PW",
+      "web" : "http://www.example.co.uk"
+    },
+    "jakob_beispiel_de" : {
+      "address" : "456 Gefälschte Straße",
+      "company_name" : "Reaktive Experten",
+      "country" : "Germany",
+      "email" : "james@beispiel.de",
+      "first_name" : "Jakob",
+      "last_name" : "Kunde",
+      "postal" : "10243",
+      "web" : "http://www.beispiel.de"
+    }
+  }
+}
