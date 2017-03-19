@@ -38,3 +38,4 @@ proguard/
 .gradle/
 build/
 .DS_Store
+sample/google-services.json
