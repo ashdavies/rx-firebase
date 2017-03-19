@@ -57,3 +57,7 @@ One of the main observations here is the consumption of child events, this is ac
 the use of the `ChildEvent` object which has reference to the event type, and data snapshot which
 can then be used to resolve the data value.
 
+#### Sample
+To run the example application, copy your own `google-services.json` from Firebase into
+the `sample` directory.
+An example database and read-only rule set are in `sample-database.json` and `sample-rules.json`.
