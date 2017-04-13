@@ -12,9 +12,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RxFirebaseAuthTest {
@@ -32,7 +32,7 @@ public class RxFirebaseAuthTest {
   public void shouldAddAuthStateListener() throws Exception {
     rx.authStateChanged().subscribe();
 
-    verify(auth).addAuthStateListener(any(FirebaseAuth.AuthStateListener.class));
+    then(auth).should().addAuthStateListener(any(FirebaseAuth.AuthStateListener.class));
   }
 
   @Test
@@ -41,42 +41,42 @@ public class RxFirebaseAuthTest {
 
     rx.signInWithCredential(credential).subscribe();
 
-    verify(auth).signInWithCredential(credential);
+    then(auth).should().signInWithCredential(credential);
   }
 
   @Test
   public void shouldSignInWithCustomToken() throws Exception {
     rx.signInWithCustomToken("token").subscribe();
 
-    verify(auth).signInWithCustomToken("token");
+    then(auth).should().signInWithCustomToken("token");
   }
 
   @Test
   public void shouldSignInWithEmailAndPassword() throws Exception {
     rx.signInWithEmailAndPassword("email", "password").subscribe();
 
-    verify(auth).signInWithEmailAndPassword("email", "password");
+    then(auth).should().signInWithEmailAndPassword("email", "password");
   }
 
   @Test
   public void shouldSignInAnonymously() throws Exception {
     rx.signInAnonymously().subscribe();
 
-    verify(auth).signInAnonymously();
+    then(auth).should().signInAnonymously();
   }
 
   @Test
   public void shouldCreateUserWithEmailAndPassword() throws Exception {
     rx.createUserWithEmailAndPassword("email", "password").subscribe();
 
-    verify(auth).createUserWithEmailAndPassword("email", "password");
+    then(auth).should().createUserWithEmailAndPassword("email", "password");
   }
 
   @Test
   public void shouldFetchProvidersForEmail() throws Exception {
     rx.fetchProvidersForEmail("email").subscribe();
 
-    verify(auth).fetchProvidersForEmail("email");
+    then(auth).should().fetchProvidersForEmail("email");
   }
 
   @Test
@@ -92,14 +92,14 @@ public class RxFirebaseAuthTest {
   public void shouldSendPasswordResetEmail() throws Exception {
     rx.sendPasswordResetEmail("email").subscribe();
 
-    verify(auth).sendPasswordResetEmail("email");
+    then(auth).should().sendPasswordResetEmail("email");
   }
 
   @Test
   public void shouldSignOut() throws Exception {
     assertThat(rx.signOut()).isEqualTo(rx);
 
-    verify(auth).signOut();
+    then(auth).should().signOut();
   }
 
   @Test

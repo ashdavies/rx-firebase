@@ -17,8 +17,8 @@ import io.reactivex.FlowableEmitter;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlowableChildEventListenerTest {
@@ -41,7 +41,7 @@ public class FlowableChildEventListenerTest {
   @Test
   public void shouldEmitOnChildAdded() throws Exception {
     listener.onChildAdded(snapshot, PREVIOUS);
-    verify(emitter).onNext(captor.capture());
+    then(emitter).should().onNext(captor.capture());
 
     assertThat(captor.getValue().snapshot()).isEqualTo(snapshot);
     assertThat(captor.getValue().type()).isEqualTo(ChildEvent.Type.CHILD_ADDED);
@@ -50,7 +50,7 @@ public class FlowableChildEventListenerTest {
   @Test
   public void shouldEmitOnChildChanged() throws Exception {
     listener.onChildChanged(snapshot, PREVIOUS);
-    verify(emitter).onNext(captor.capture());
+    then(emitter).should().onNext(captor.capture());
 
     assertThat(captor.getValue().snapshot()).isEqualTo(snapshot);
     assertThat(captor.getValue().type()).isEqualTo(ChildEvent.Type.CHILD_CHANGED);
@@ -59,7 +59,7 @@ public class FlowableChildEventListenerTest {
   @Test
   public void shouldEmitOnChildRemoved() throws Exception {
     listener.onChildRemoved(snapshot);
-    verify(emitter).onNext(captor.capture());
+    then(emitter).should().onNext(captor.capture());
 
     assertThat(captor.getValue().snapshot()).isEqualTo(snapshot);
     assertThat(captor.getValue().type()).isEqualTo(ChildEvent.Type.CHILD_REMOVED);
@@ -68,7 +68,7 @@ public class FlowableChildEventListenerTest {
   @Test
   public void shouldEmitOnChildMoved() throws Exception {
     listener.onChildMoved(snapshot, PREVIOUS);
-    verify(emitter).onNext(captor.capture());
+    then(emitter).should().onNext(captor.capture());
 
     assertThat(captor.getValue().snapshot()).isEqualTo(snapshot);
     assertThat(captor.getValue().type()).isEqualTo(ChildEvent.Type.CHILD_MOVED);
@@ -82,13 +82,13 @@ public class FlowableChildEventListenerTest {
 
     listener.onCancelled(error);
 
-    verify(emitter).onError(exception);
+    then(emitter).should().onError(exception);
   }
 
   @Test
   public void shouldRemoveEventListener() throws Exception {
     listener.cancellable(query).cancel();
 
-    verify(query).removeEventListener(listener);
+    then(query).should().removeEventListener(listener);
   }
 }

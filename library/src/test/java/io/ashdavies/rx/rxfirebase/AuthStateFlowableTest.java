@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import io.reactivex.FlowableEmitter;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthStateFlowableTest {
@@ -29,13 +29,13 @@ public class AuthStateFlowableTest {
   public void shouldEmitAuthStateChange() throws Exception {
     flowable.onAuthStateChanged(auth);
 
-    verify(emitter).onNext(auth);
+    then(emitter).should().onNext(auth);
   }
 
   @Test
   public void shouldRemoveAuthStateListener() throws Exception {
     flowable.cancellable(auth).cancel();
 
-    verify(auth).removeAuthStateListener(flowable);
+    then(auth).should().removeAuthStateListener(flowable);
   }
 }

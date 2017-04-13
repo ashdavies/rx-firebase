@@ -15,7 +15,7 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.functions.Cancellable;
 
 import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthStateOnSubscribeTest {
@@ -36,10 +36,10 @@ public class AuthStateOnSubscribeTest {
   @SuppressWarnings("unchecked")
   public void shouldAddAuthStateListener() throws Exception {
     onSubscribe.subscribe(emitter);
-    verify(auth).addAuthStateListener(captor.capture());
+    then(auth).should().addAuthStateListener(captor.capture());
 
     captor.getValue().onAuthStateChanged(auth);
-    verify(emitter).onNext(auth);
+    then(emitter).should().onNext(auth);
   }
 
   @Test
@@ -47,10 +47,10 @@ public class AuthStateOnSubscribeTest {
     ArgumentCaptor<Cancellable> captor = forClass(Cancellable.class);
 
     onSubscribe.subscribe(emitter);
-    verify(emitter).setCancellable(captor.capture());
-    verify(auth).addAuthStateListener(this.captor.capture());
+    then(emitter).should().setCancellable(captor.capture());
+    then(auth).should().addAuthStateListener(this.captor.capture());
 
     captor.getValue().cancel();
-    verify(auth).removeAuthStateListener(this.captor.getValue());
+    then(auth).should().removeAuthStateListener(this.captor.getValue());
   }
 }

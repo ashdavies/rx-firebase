@@ -20,8 +20,8 @@ import io.reactivex.functions.Cancellable;
 
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValueEventOnSubscribeTest {
@@ -44,22 +44,22 @@ public class ValueEventOnSubscribeTest {
   @Test
   public void shouldEmitValue() throws Exception {
     onSubscribe.subscribe(emitter);
-    verify(query).addValueEventListener(captor.capture());
+    then(query).should().addValueEventListener(captor.capture());
 
     captor.getValue().onDataChange(snapshot);
-    verify(emitter).onNext(snapshot);
+    then(emitter).should().onNext(snapshot);
   }
 
   @Test
   public void shouldEmitSingleError() throws Exception {
     onSubscribe.subscribe(emitter);
-    verify(query).addValueEventListener(captor.capture());
+    then(query).should().addValueEventListener(captor.capture());
 
     DatabaseException exception = mock(DatabaseException.class);
     given(error.toException()).willReturn(exception);
 
     captor.getValue().onCancelled(error);
-    verify(emitter).onError(exception);
+    then(emitter).should().onError(exception);
   }
 
   @Test
@@ -67,10 +67,10 @@ public class ValueEventOnSubscribeTest {
     ArgumentCaptor<Cancellable> captor = forClass(Cancellable.class);
 
     onSubscribe.subscribe(emitter);
-    verify(emitter).setCancellable(captor.capture());
-    verify(query).addValueEventListener(this.captor.capture());
+    then(emitter).should().setCancellable(captor.capture());
+    then(query).should().addValueEventListener(this.captor.capture());
 
     captor.getValue().cancel();
-    verify(query).removeEventListener(this.captor.getValue());
+    then(query).should().removeEventListener(this.captor.getValue());
   }
 }

@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import io.reactivex.functions.Cancellable;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthStateCancellableTest {
@@ -29,6 +29,6 @@ public class AuthStateCancellableTest {
   public void shouldRemoveAuthStateListener() throws Exception {
     cancellable.cancel();
 
-    verify(auth).removeAuthStateListener(listener);
+    then(auth).should().removeAuthStateListener(listener);
   }
 }

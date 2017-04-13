@@ -94,13 +94,13 @@ public class RxFirebaseDatabaseTest {
   public void shouldLimitToFirst() throws Exception {
     rx.limitToFirst(100);
 
-    then(query).should().limitToLast(100);
+    then(query).should().limitToFirst(100);
   }
 
   @Test
   @SuppressLint("CheckResult")
   public void shouldLimitToLast() throws Exception {
-    rx.limitToLast(50).onValueEvent();
+    rx.limitToLast(50);
 
     then(query).should().limitToLast(50);
   }
@@ -110,7 +110,7 @@ public class RxFirebaseDatabaseTest {
     given(reference.setPriority("priority")).willReturn(task);
 
     rx.setPriority("priority").subscribe();
-    
+
     then(reference).should().setPriority("priority");
   }
 
@@ -148,28 +148,28 @@ public class RxFirebaseDatabaseTest {
   public void shouldAddValueEventListener() throws Exception {
     rx.onValueEvent().subscribe();
 
-    then(query).should().addValueEventListener(any(ValueEventListener.class));
+    then(reference).should().addValueEventListener(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddSingleValueEventListener() throws Exception {
     rx.onSingleValueEvent().subscribe();
 
-    then(query).should().addListenerForSingleValueEvent(any(ValueEventListener.class));
+    then(reference).should().addListenerForSingleValueEvent(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddChildEventListener() throws Exception {
     rx.onChildEvent().subscribe();
 
-    then(query).should().addChildEventListener(any(ChildEventListener.class));
+    then(reference).should().addChildEventListener(any(ChildEventListener.class));
   }
 
   @Test
   public void shouldBufferChildEvents() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent().test(1);
-    then(query).should().addChildEventListener(captor.capture());
+    then(reference).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -186,7 +186,7 @@ public class RxFirebaseDatabaseTest {
   public void shouldFilterChildEvent() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent(ChildEvent.Type.CHILD_ADDED).test();
-    then(query).should().addChildEventListener(captor.capture());
+    then(reference).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -206,7 +206,7 @@ public class RxFirebaseDatabaseTest {
         .onChildEventValue(ChildEvent.Type.CHILD_ADDED, String.class)
         .test();
 
-    then(query).should().addChildEventListener(captor.capture());
+    then(reference).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);

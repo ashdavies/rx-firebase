@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.CompletableEmitter;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -50,7 +51,7 @@ public class SetValueCompletionCompletableTest {
 
     completable.onComplete(error, null);
 
-    verify(emitter).onError(exception);
+    then(emitter).should().onError(exception);
     verify(emitter, never()).onComplete();
   }
 
@@ -59,6 +60,6 @@ public class SetValueCompletionCompletableTest {
     completable.onComplete(null, reference);
 
     verify(emitter, never()).onError(any(Throwable.class));
-    verify(emitter).onComplete();
+    then(emitter).should().onComplete();
   }
 }

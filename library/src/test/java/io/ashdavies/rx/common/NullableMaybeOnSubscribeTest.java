@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
 
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -26,7 +27,7 @@ public class NullableMaybeOnSubscribeTest {
     onSubscribe.subscribe(emitter);
 
     verify(emitter, never()).onSuccess(anyString());
-    verify(emitter).onComplete();
+    then(emitter).should().onComplete();
   }
 
   @Test
@@ -35,7 +36,7 @@ public class NullableMaybeOnSubscribeTest {
 
     onSubscribe.subscribe(emitter);
 
-    verify(emitter).onSuccess(GINGERNUTS);
-    verify(emitter).onComplete();
+    then(emitter).should().onSuccess(GINGERNUTS);
+    then(emitter).should().onComplete();
   }
 }

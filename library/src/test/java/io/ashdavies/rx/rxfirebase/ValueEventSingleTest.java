@@ -14,8 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.SingleEmitter;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValueEventSingleTest {
@@ -35,7 +35,7 @@ public class ValueEventSingleTest {
 
     single.onDataChange(snapshot);
 
-    verify(emitter).onSuccess(snapshot);
+    then(emitter).should().onSuccess(snapshot);
   }
 
   @Test
@@ -47,7 +47,7 @@ public class ValueEventSingleTest {
 
     single.onCancelled(error);
 
-    verify(emitter).onError(exception);
+    then(emitter).should().onError(exception);
   }
 
   @Test
@@ -56,6 +56,6 @@ public class ValueEventSingleTest {
 
     single.cancellable(query).cancel();
 
-    verify(query).removeEventListener(single);
+    then(query).should().removeEventListener(single);
   }
 }

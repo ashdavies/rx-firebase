@@ -14,8 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.FlowableEmitter;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValueEventFlowableTest {
@@ -35,7 +35,7 @@ public class ValueEventFlowableTest {
 
     flowable.onDataChange(snapshot);
 
-    verify(emitter).onNext(snapshot);
+    then(emitter).should().onNext(snapshot);
   }
 
   @Test
@@ -47,7 +47,7 @@ public class ValueEventFlowableTest {
 
     flowable.onCancelled(error);
 
-    verify(emitter).onError(exception);
+    then(emitter).should().onError(exception);
   }
 
   @Test
@@ -56,6 +56,6 @@ public class ValueEventFlowableTest {
 
     flowable.cancellable(query).cancel();
 
-    verify(query).removeEventListener(flowable);
+    then(query).should().removeEventListener(flowable);
   }
 }

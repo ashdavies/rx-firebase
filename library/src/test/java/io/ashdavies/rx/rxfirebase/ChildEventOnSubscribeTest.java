@@ -17,7 +17,7 @@ import io.reactivex.functions.Cancellable;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChildEventOnSubscribeTest {
@@ -38,12 +38,12 @@ public class ChildEventOnSubscribeTest {
   @Test
   public void shouldAddChildEventListener() throws Exception {
     onSubscribe.subscribe(emitter);
-    verify(query).addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     captor.getValue().onChildAdded(snapshot, null);
 
     ArgumentCaptor<ChildEvent> captor = forClass(ChildEvent.class);
-    verify(emitter).onNext(captor.capture());
+    then(emitter).should().onNext(captor.capture());
 
     ChildEvent event = captor.getValue();
     assertThat(event.snapshot()).isEqualTo(snapshot);
@@ -55,10 +55,10 @@ public class ChildEventOnSubscribeTest {
     ArgumentCaptor<Cancellable> captor = forClass(Cancellable.class);
 
     onSubscribe.subscribe(emitter);
-    verify(emitter).setCancellable(captor.capture());
-    verify(query).addChildEventListener(this.captor.capture());
+    then(emitter).should().setCancellable(captor.capture());
+    then(query).should().addChildEventListener(this.captor.capture());
 
     captor.getValue().cancel();
-    verify(query).removeEventListener(this.captor.getValue());
+    then(query).should().removeEventListener(this.captor.getValue());
   }
 }

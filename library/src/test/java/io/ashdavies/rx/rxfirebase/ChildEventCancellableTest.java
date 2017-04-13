@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import io.reactivex.functions.Cancellable;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChildEventCancellableTest {
@@ -30,6 +30,6 @@ public class ChildEventCancellableTest {
   public void shouldRemoveEventListener() throws Exception {
     cancellable.cancel();
 
-    verify(query).removeEventListener(listener);
+    then(query).should().removeEventListener(listener);
   }
 }

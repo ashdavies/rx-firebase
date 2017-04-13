@@ -13,9 +13,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.CompletableEmitter;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SetValueOnSubscribeTest {
@@ -39,9 +39,9 @@ public class SetValueOnSubscribeTest {
     given(emitter.isDisposed()).willReturn(false);
 
     onSubscribe.subscribe(emitter);
-    verify(reference).setValue(eq(DIGESTIVES), isNull(), captor.capture());
+    then(reference).should().setValue(eq(DIGESTIVES), isNull(), captor.capture());
 
     captor.getValue().onComplete(null, reference);
-    verify(emitter).onComplete();
+    then(emitter).should().onComplete();
   }
 }
