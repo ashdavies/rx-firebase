@@ -55,7 +55,7 @@ publish {
     groupId = 'io.ashdavies.rx'
     artifactId = 'rx-firebase'
 
-    version = project.version
+    version = gitVersionName
     description = 'Reactive Java wrapper for use with the Android Firebase client'
     website = 'https://github.com/ashdavies/rx-firebase'
 }
