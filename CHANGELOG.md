@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 1.3.2 *(2017-04-13)*
+----------------------------
+
+ * Resolve travis build artifact deploy script
+
+Version 1.3.1 *(2017-04-13)*
+----------------------------
+
+ * Update code style settings
+ * Resolve incompatible language target for sample project
+ 
 Version 1.3.0 *(2017-04-13)*
 ----------------------------
 
