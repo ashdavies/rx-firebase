@@ -197,11 +197,4 @@ public class RxFirebaseDatabaseTest {
 
     verify(database).setLogLevel(Logger.Level.DEBUG);
   }
-
-  @Test
-  public void shouldSetPersistenceEnabled() throws Exception {
-    rx.setPersistenceEnabled(true);
-
-    verify(database).setPersistenceEnabled(true);
-  }
 }

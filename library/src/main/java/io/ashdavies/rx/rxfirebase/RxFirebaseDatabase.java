@@ -30,8 +30,8 @@ public final class RxFirebaseDatabase {
     return getInstance(FirebaseDatabase.getInstance().getReference());
   }
 
-  public static RxFirebaseDatabase getInstance(String path) {
-    return getInstance(FirebaseDatabase.getInstance().getReference(path));
+  public static RxFirebaseDatabase getInstance(String path, Object... args) {
+    return getInstance(FirebaseDatabase.getInstance().getReference(String.format(path, args)));
   }
 
   public static RxFirebaseDatabase getInstance(DatabaseReference reference) {
@@ -40,6 +40,10 @@ public final class RxFirebaseDatabase {
 
   public static RxFirebaseDatabase with(Query query) {
     return getInstance(query.getRef());
+  }
+
+  public RxFirebaseDatabase child(String child) {
+    return getInstance(reference.child(child));
   }
 
   @CheckResult
@@ -109,11 +113,6 @@ public final class RxFirebaseDatabase {
 
   public RxFirebaseDatabase setLogLevel(Logger.Level level) {
     reference.getDatabase().setLogLevel(level);
-    return this;
-  }
-
-  public RxFirebaseDatabase setPersistenceEnabled(boolean enabled) {
-    reference.getDatabase().setPersistenceEnabled(enabled);
     return this;
   }
 }
