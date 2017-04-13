@@ -20,10 +20,10 @@ import io.reactivex.Single;
 @SuppressWarnings("WeakerAccess")
 public final class RxFirebaseDatabase {
 
-  private final DatabaseReference reference;
+  private final Query query;
 
-  private RxFirebaseDatabase(DatabaseReference reference) {
-    this.reference = reference;
+  private RxFirebaseDatabase(Query query) {
+    this.query = query;
   }
 
   public static RxFirebaseDatabase getInstance() {
@@ -34,21 +34,52 @@ public final class RxFirebaseDatabase {
     return getInstance(FirebaseDatabase.getInstance().getReference(String.format(path, args)));
   }
 
-  public static RxFirebaseDatabase getInstance(DatabaseReference reference) {
-    return new RxFirebaseDatabase(reference);
+  public static RxFirebaseDatabase getInstance(Query query) {
+    return new RxFirebaseDatabase(query);
   }
 
-  public static RxFirebaseDatabase with(Query query) {
-    return getInstance(query.getRef());
+  private DatabaseReference getReference() {
+    return query.getRef();
   }
 
+  @CheckResult
   public RxFirebaseDatabase child(String child) {
-    return getInstance(reference.child(child));
+    return getInstance(getReference().child(child));
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase orderByChild(String child) {
+    return getInstance(query.orderByChild(child));
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase orderByKey() {
+    return getInstance(query.orderByKey());
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase orderByPriority() {
+    return getInstance(query.orderByPriority());
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase orderByValue() {
+    return getInstance(query.orderByValue());
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase limitToFirst(int i) {
+    return getInstance(query.limitToFirst(i));
+  }
+
+  @CheckResult
+  public RxFirebaseDatabase limitToLast(int i) {
+    return getInstance(query.limitToLast(i));
   }
 
   @CheckResult
   public Completable setPriority(Object object) {
-    return RxTasks.completable(reference.setPriority(object));
+    return RxTasks.completable(getReference().setPriority(object));
   }
 
   @CheckResult
@@ -58,32 +89,32 @@ public final class RxFirebaseDatabase {
 
   @CheckResult
   public Completable setValue(Object value, @Nullable Object priority) {
-    return Completable.create(new SetValueOnSubscribe(reference, value, priority));
+    return Completable.create(new SetValueOnSubscribe(getReference(), value, priority));
   }
 
   @CheckResult
   public Completable updateChildren(Map<String, Object> map) {
-    return RxTasks.completable(reference.updateChildren(map));
+    return RxTasks.completable(getReference().updateChildren(map));
   }
 
   @CheckResult
   public Completable removeValue() {
-    return RxTasks.completable(reference.removeValue());
+    return RxTasks.completable(getReference().removeValue());
   }
 
   @CheckResult
   public Flowable<DataSnapshot> onValueEvent() {
-    return Flowable.create(new ValueEventOnSubscribe(reference), BackpressureStrategy.BUFFER);
+    return Flowable.create(new ValueEventOnSubscribe(getReference()), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult
   public Single<DataSnapshot> onSingleValueEvent() {
-    return Single.create(new SingleValueEventOnSubscribe(reference));
+    return Single.create(new SingleValueEventOnSubscribe(getReference()));
   }
 
   @CheckResult
   public Flowable<ChildEvent> onChildEvent() {
-    return Flowable.create(new ChildEventOnSubscribe(reference), BackpressureStrategy.BUFFER);
+    return Flowable.create(new ChildEventOnSubscribe(getReference()), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult
@@ -91,28 +122,32 @@ public final class RxFirebaseDatabase {
     return onChildEvent().filter(new ChildEventTypePredicate(childEventType));
   }
 
-  @CheckResult
+  @CheckResult()
   public <T> Flowable<T> onChildEventValue(ChildEvent.Type childEventType, Class<T> kls) {
     return onChildEvent(childEventType).compose(new ChildEventClassTransformer<>(kls));
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase purgeOutstandingWrites() {
-    reference.getDatabase().purgeOutstandingWrites();
+    getReference().getDatabase().purgeOutstandingWrites();
     return this;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase goOnline() {
-    reference.getDatabase().goOnline();
+    getReference().getDatabase().goOnline();
     return this;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase goOffline() {
-    reference.getDatabase().goOffline();
+    getReference().getDatabase().goOffline();
     return this;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase setLogLevel(Logger.Level level) {
-    reference.getDatabase().setLogLevel(level);
+    getReference().getDatabase().setLogLevel(level);
     return this;
   }
 }
