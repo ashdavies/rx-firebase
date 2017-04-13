@@ -41,9 +41,6 @@
           <option name="RIGHT_MARGIN" value="72" />
         </MarkdownNavigatorCodeStyleSettings>
         <Objective-C-extensions>
-          <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
-          <option name="RELEASE_STYLE" value="IVAR" />
-          <option name="TYPE_QUALIFIERS_PLACEMENT" value="BEFORE" />
           <file>
             <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Import" />
             <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Macro" />
@@ -69,9 +66,7 @@
           </extensions>
         </Objective-C-extensions>
         <XML>
-          <option name="XML_KEEP_LINE_BREAKS" value="false" />
-          <option name="XML_ALIGN_ATTRIBUTES" value="false" />
-          <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
+          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
         <codeStyleSettings language="JAVA">
           <option name="METHOD_ANNOTATION_WRAP" value="0" />
@@ -243,6 +238,6 @@
         </codeStyleSettings>
       </value>
     </option>
-    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="IS24Android" />
   </component>
 </project>

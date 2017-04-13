@@ -1,7 +1,6 @@
 package io.ashdavies.rx.rxfirebase;
 
 import android.annotation.SuppressLint;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -10,7 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
+import io.reactivex.subscribers.TestSubscriber;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Map;
-
-import io.reactivex.subscribers.TestSubscriber;
 
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.given;

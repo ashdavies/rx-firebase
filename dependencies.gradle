@@ -61,11 +61,11 @@ ext {
 
             ],
 
-            'rx': [
+            'rx'         : [
 
-                    'android'  : "io.reactivex.rxjava2:rxandroid:$versions.rx.android",
-                    'java'     : "io.reactivex.rxjava2:rxjava:$versions.rx.java",
-                    'tasks'    : "io.ashdavies.rx:rx-tasks:$versions.rx.tasks",
+                    'android': "io.reactivex.rxjava2:rxandroid:$versions.rx.android",
+                    'java'   : "io.reactivex.rxjava2:rxjava:$versions.rx.java",
+                    'tasks'  : "io.ashdavies.rx:rx-tasks:$versions.rx.tasks",
 
             ],
 

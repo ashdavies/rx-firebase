@@ -25,6 +25,11 @@ android {
         versionName project.version
     }
 
+    compileOptions {
+        sourceCompatibility sourceCompatibilityVersion
+        targetCompatibility targetCompatibilityVersion
+    }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }

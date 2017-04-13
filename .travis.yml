@@ -39,7 +39,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false;
+    script: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false
     on:
       branch: master
 
