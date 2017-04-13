@@ -5,19 +5,22 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
-
-import com.google.firebase.FirebaseApp;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
 import io.ashdavies.commons.activity.AbstractActivity;
+import io.ashdavies.commons.adapter.AbstractAdapter;
 import io.ashdavies.commons.adapter.DividerItemDecoration;
+import io.ashdavies.commons.view.AbstractView;
 import io.ashdavies.rx.rxfirebase.ChildEvent;
 import io.ashdavies.rx.rxfirebase.RxFirebaseAuth;
 import io.ashdavies.rx.rxfirebase.RxFirebaseDatabase;
-import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import org.reactivestreams.Publisher;
 
 public class MainActivity extends AbstractActivity {
 
@@ -33,6 +36,7 @@ public class MainActivity extends AbstractActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     FirebaseApp.initializeApp(this);
     adapter = new UserAdapter(this);
 
@@ -42,13 +46,14 @@ public class MainActivity extends AbstractActivity {
 
     disposable = RxFirebaseAuth.getInstance()
         .signInAnonymously()
-        .flatMapPublisher(result -> getUserStream())
-        .subscribe(adapter::addItem, this::onError);
-  }
-
-  private Flowable<UserEntity> getUserStream() {
-    return RxFirebaseDatabase.getInstance(CUSTOMERS)
-        .onChildEventValue(ChildEvent.Type.CHILD_ADDED, UserEntity.class);
+        .flatMapPublisher(new Function<AuthResult, Publisher<UserEntity>>() {
+          @Override
+          public Publisher<UserEntity> apply(AuthResult result) throws Exception {
+            return RxFirebaseDatabase.getInstance(CUSTOMERS)
+                .onChildEventValue(ChildEvent.Type.CHILD_ADDED, UserEntity.class);
+          }
+        })
+        .subscribe(new AdapterConsumer<>(adapter), new AbstractViewError(this));
   }
 
   @Override
@@ -72,5 +77,33 @@ public class MainActivity extends AbstractActivity {
   @Override
   public void onError(Throwable throwable) {
     Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+  }
+
+  private static class AdapterConsumer<T> implements Consumer<T> {
+
+    private final AbstractAdapter<?, T> adapter;
+
+    AdapterConsumer(AbstractAdapter<?, T> adapter) {
+      this.adapter = adapter;
+    }
+
+    @Override
+    public void accept(T item) throws Exception {
+      adapter.addItem(item);
+    }
+  }
+
+  private static class AbstractViewError implements Consumer<Throwable> {
+
+    private final AbstractView view;
+
+    AbstractViewError(AbstractView view) {
+      this.view = view;
+    }
+
+    @Override
+    public void accept(Throwable throwable) throws Exception {
+      view.onError(throwable);
+    }
   }
 }
