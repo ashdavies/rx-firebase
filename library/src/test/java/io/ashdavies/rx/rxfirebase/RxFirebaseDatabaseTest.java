@@ -1,5 +1,7 @@
 package io.ashdavies.rx.rxfirebase;
 
+import android.annotation.SuppressLint;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,10 +25,10 @@ import io.reactivex.subscribers.TestSubscriber;
 
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RxFirebaseDatabaseTest {
@@ -35,48 +37,95 @@ public class RxFirebaseDatabaseTest {
 
   @Mock FirebaseDatabase database;
   @Mock DatabaseReference reference;
+  @Mock Query query;
 
   @Mock Task<Void> task;
 
   @Before
   public void setUp() throws Exception {
-    rx = RxFirebaseDatabase.getInstance(reference);
+    given(query.getRef()).willReturn(reference);
     given(reference.getDatabase()).willReturn(database);
+
+    rx = RxFirebaseDatabase.getInstance(query);
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldGetReferenceChild() throws Exception {
+    rx.child("child");
+
+    then(reference).should().child("child");
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldOrderByChild() throws Exception {
+    rx.orderByChild("child");
+
+    then(query).should().orderByChild("child");
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldOrderByKey() throws Exception {
+    rx.orderByKey();
+
+    then(query).should().orderByKey();
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldOrderByPriority() throws Exception {
+    rx.orderByPriority();
+
+    then(query).should().orderByPriority();
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldOrderByValue() throws Exception {
+    rx.orderByValue();
+
+    then(query).should().orderByValue();
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldLimitToFirst() throws Exception {
+    rx.limitToFirst(100);
+
+    then(query).should().limitToLast(100);
+  }
+
+  @Test
+  @SuppressLint("CheckResult")
+  public void shouldLimitToLast() throws Exception {
+    rx.limitToLast(50).onValueEvent();
+
+    then(query).should().limitToLast(50);
   }
 
   @Test
   public void shouldSetPriority() throws Exception {
-    given(reference.setPriority(null)).willReturn(task);
+    given(reference.setPriority("priority")).willReturn(task);
 
-    rx.setPriority(null).subscribe();
-
-    verify(reference).setPriority(null);
-  }
-
-  @Test
-  public void shouldSetPriorityOnQueryReference() throws Exception {
-    Query query = mock(Query.class);
-    given(query.getRef()).willReturn(reference);
-    given(reference.setPriority(null)).willReturn(task);
-
-    RxFirebaseDatabase rx = RxFirebaseDatabase.with(query);
-    rx.setPriority(null).subscribe();
-
-    verify(reference).setPriority(null);
+    rx.setPriority("priority").subscribe();
+    
+    then(reference).should().setPriority("priority");
   }
 
   @Test
   public void shouldSetValueWithNullPriority() throws Exception {
     rx.setValue(null).subscribe();
 
-    verify(reference).setValue(isNull(), isNull(), any(DatabaseReference.CompletionListener.class));
+    then(reference).should().setValue(isNull(), isNull(), any(DatabaseReference.CompletionListener.class));
   }
 
   @Test
   public void shouldSetValue() throws Exception {
-    rx.setValue("STRING").subscribe();
+    rx.setValue("string").subscribe();
 
-    verify(reference).setValue(Matchers.eq("STRING"), isNull(), any(DatabaseReference.CompletionListener.class));
+    then(reference).should().setValue(Matchers.eq("string"), isNull(), any(DatabaseReference.CompletionListener.class));
   }
 
   @Test
@@ -85,42 +134,42 @@ public class RxFirebaseDatabaseTest {
     Map<String, Object> map = mock(Map.class);
     rx.updateChildren(map).subscribe();
 
-    verify(reference).updateChildren(map);
+    then(reference).should().updateChildren(map);
   }
 
   @Test
   public void shouldRemoveValue() throws Exception {
     rx.removeValue().subscribe();
 
-    verify(reference).removeValue();
+    then(reference).should().removeValue();
   }
 
   @Test
   public void shouldAddValueEventListener() throws Exception {
     rx.onValueEvent().subscribe();
 
-    verify(reference).addValueEventListener(any(ValueEventListener.class));
+    then(query).should().addValueEventListener(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddSingleValueEventListener() throws Exception {
     rx.onSingleValueEvent().subscribe();
 
-    verify(reference).addListenerForSingleValueEvent(any(ValueEventListener.class));
+    then(query).should().addListenerForSingleValueEvent(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddChildEventListener() throws Exception {
     rx.onChildEvent().subscribe();
 
-    verify(reference).addChildEventListener(any(ChildEventListener.class));
+    then(query).should().addChildEventListener(any(ChildEventListener.class));
   }
 
   @Test
   public void shouldBufferChildEvents() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent().test(1);
-    verify(reference).addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -137,7 +186,7 @@ public class RxFirebaseDatabaseTest {
   public void shouldFilterChildEvent() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent(ChildEvent.Type.CHILD_ADDED).test();
-    verify(reference).addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -157,16 +206,16 @@ public class RxFirebaseDatabaseTest {
         .onChildEventValue(ChildEvent.Type.CHILD_ADDED, String.class)
         .test();
 
-    verify(reference).addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
 
-    given(snapshot.getValue(String.class)).willReturn("BISCUITS");
+    given(snapshot.getValue(String.class)).willReturn("biscuits");
     listener.onChildAdded(snapshot, null);
 
     subscriber
-        .assertValue("BISCUITS")
+        .assertValue("biscuits")
         .assertNoErrors();
   }
 
@@ -174,27 +223,27 @@ public class RxFirebaseDatabaseTest {
   public void shouldPurgeOutstandingWrites() throws Exception {
     rx.purgeOutstandingWrites();
 
-    verify(database).purgeOutstandingWrites();
+    then(database).should().purgeOutstandingWrites();
   }
 
   @Test
   public void shouldGoOnline() throws Exception {
     rx.goOnline();
 
-    verify(database).goOnline();
+    then(database).should().goOnline();
   }
 
   @Test
   public void shouldGoOffline() throws Exception {
     rx.goOffline();
 
-    verify(database).goOffline();
+    then(database).should().goOffline();
   }
 
   @Test
   public void shouldSetLogLevel() throws Exception {
     rx.setLogLevel(Logger.Level.DEBUG);
 
-    verify(database).setLogLevel(Logger.Level.DEBUG);
+    then(database).should().setLogLevel(Logger.Level.DEBUG);
   }
 }
