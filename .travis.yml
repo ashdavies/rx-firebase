@@ -35,7 +35,15 @@ script:
 
 after_success:
   - ./gradlew jacocoTestReport && bash <(curl -s https://codecov.io/bash)
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false; fi
+
+before_deploy:
+  - chmod -R +x tools
+
+deploy:
+  - provider: script
+    script: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PdryRun=false;
+    on:
+      branch: master
 
 env:
   global:
