@@ -1,7 +1,18 @@
-allprojects {
+buildscript {
   repositories {
     jcenter()
   }
 
-  version = '1.2.3'
+  dependencies {
+    classpath 'com.novoda:bintray-release:0.3.4'
+  }
+}
+
+allprojects {
+  apply from: file("$project.rootDir/tools/script-git-version.gradle")
+  apply from: file("$project.rootDir/dependencies.gradle")
+
+  repositories {
+    jcenter()
+  }
 }

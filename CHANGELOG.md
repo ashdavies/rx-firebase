@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 1.3.0 *(2017-04-13)*
+----------------------------
+
+ * Updated build environment
+ * Updated build deployment
+ * Introduced RxDatabaseQuery
+ 
 Version 1.2.3 *(2017-02-15)*
 ----------------------------
 

@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'com.google.gms:google-services:3.0.0'
 
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
@@ -15,8 +15,6 @@ buildscript {
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 apply plugin: 'jacoco-android'
-
-apply from: '../dependencies.gradle'
 
 android {
     compileSdkVersion 25
@@ -35,18 +33,14 @@ android {
         versionCode 1
         versionName project.version
     }
-
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
 }
 
 dependencies {
     compile libraries.annotations.jsr305
 
-    compile libraries.rxJava
-    compile libraries.rxTasks
-    compile libraries.rxAndroid
+    compile libraries.rx.java
+    compile libraries.rx.tasks
+    compile libraries.rx.android
 
     compile libraries.firebase.core
     compile libraries.firebase.auth

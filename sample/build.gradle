@@ -4,15 +4,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.guava:guava:20.0'
     }
 }
 
 apply plugin: 'com.android.application'
-
-apply from: '../dependencies.gradle'
 
 android {
     compileSdkVersion 25
@@ -20,10 +17,6 @@ android {
 
     defaultConfig {
         applicationId 'io.ashdavies.sample'
-
-        jackOptions {
-            enabled true
-        }
 
         minSdkVersion 21
         targetSdkVersion 25
@@ -46,11 +39,11 @@ android {
 dependencies {
     compile project(':library')
 
-    compile libraries.androidCommons
+    compile libraries.android.commons
 
-    compile libraries.androidSupport.design
-    compile libraries.androidSupport.appCompat
-    compile libraries.androidSupport.recyclerView
+    compile libraries.android.support.design
+    compile libraries.android.support.appCompat
+    compile libraries.android.support.recyclerView
 
     compile libraries.butterknife.core
     annotationProcessor libraries.butterknife.compiler
@@ -59,8 +52,8 @@ dependencies {
     compile libraries.firebase.auth
     compile libraries.firebase.database
 
-    compile libraries.rxJava
-    compile libraries.rxAndroid
+    compile libraries.rx.java
+    compile libraries.rx.android
 }
 
 apply plugin: 'com.google.gms.google-services'
