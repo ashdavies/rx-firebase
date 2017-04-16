@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.3.3 *(2017-04-16)*
+----------------------------
+
+ * Resolve incorrect usage of DatabaseReference
+ 
 Version 1.3.2 *(2017-04-13)*
 ----------------------------
 

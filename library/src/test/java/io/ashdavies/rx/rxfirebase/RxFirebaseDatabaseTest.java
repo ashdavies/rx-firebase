@@ -144,28 +144,28 @@ public class RxFirebaseDatabaseTest {
   public void shouldAddValueEventListener() throws Exception {
     rx.onValueEvent().subscribe();
 
-    then(reference).should().addValueEventListener(any(ValueEventListener.class));
+    then(query).should().addValueEventListener(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddSingleValueEventListener() throws Exception {
     rx.onSingleValueEvent().subscribe();
 
-    then(reference).should().addListenerForSingleValueEvent(any(ValueEventListener.class));
+    then(query).should().addListenerForSingleValueEvent(any(ValueEventListener.class));
   }
 
   @Test
   public void shouldAddChildEventListener() throws Exception {
     rx.onChildEvent().subscribe();
 
-    then(reference).should().addChildEventListener(any(ChildEventListener.class));
+    then(query).should().addChildEventListener(any(ChildEventListener.class));
   }
 
   @Test
   public void shouldBufferChildEvents() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent().test(1);
-    then(reference).should().addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -182,7 +182,7 @@ public class RxFirebaseDatabaseTest {
   public void shouldFilterChildEvent() throws Exception {
     ArgumentCaptor<ChildEventListener> captor = forClass(ChildEventListener.class);
     TestSubscriber<ChildEvent> subscriber = rx.onChildEvent(ChildEvent.Type.CHILD_ADDED).test();
-    then(reference).should().addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);
@@ -202,7 +202,7 @@ public class RxFirebaseDatabaseTest {
         .onChildEventValue(ChildEvent.Type.CHILD_ADDED, String.class)
         .test();
 
-    then(reference).should().addChildEventListener(captor.capture());
+    then(query).should().addChildEventListener(captor.capture());
 
     ChildEventListener listener = captor.getValue();
     DataSnapshot snapshot = mock(DataSnapshot.class);

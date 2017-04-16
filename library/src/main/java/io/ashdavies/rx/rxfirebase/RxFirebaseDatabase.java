@@ -2,20 +2,16 @@ package io.ashdavies.rx.rxfirebase;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 import com.google.firebase.database.Query;
-
-import java.util.Map;
-
 import io.ashdavies.rx.rxtasks.RxTasks;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
 public final class RxFirebaseDatabase {
@@ -38,13 +34,9 @@ public final class RxFirebaseDatabase {
     return new RxFirebaseDatabase(query);
   }
 
-  private DatabaseReference getReference() {
-    return query.getRef();
-  }
-
   @CheckResult
   public RxFirebaseDatabase child(String child) {
-    return getInstance(getReference().child(child));
+    return getInstance(query.getRef().child(child));
   }
 
   @CheckResult
@@ -79,7 +71,7 @@ public final class RxFirebaseDatabase {
 
   @CheckResult
   public Completable setPriority(Object object) {
-    return RxTasks.completable(getReference().setPriority(object));
+    return RxTasks.completable(query.getRef().setPriority(object));
   }
 
   @CheckResult
@@ -89,32 +81,32 @@ public final class RxFirebaseDatabase {
 
   @CheckResult
   public Completable setValue(Object value, @Nullable Object priority) {
-    return Completable.create(new SetValueOnSubscribe(getReference(), value, priority));
+    return Completable.create(new SetValueOnSubscribe(query.getRef(), value, priority));
   }
 
   @CheckResult
   public Completable updateChildren(Map<String, Object> map) {
-    return RxTasks.completable(getReference().updateChildren(map));
+    return RxTasks.completable(query.getRef().updateChildren(map));
   }
 
   @CheckResult
   public Completable removeValue() {
-    return RxTasks.completable(getReference().removeValue());
+    return RxTasks.completable(query.getRef().removeValue());
   }
 
   @CheckResult
   public Flowable<DataSnapshot> onValueEvent() {
-    return Flowable.create(new ValueEventOnSubscribe(getReference()), BackpressureStrategy.BUFFER);
+    return Flowable.create(new ValueEventOnSubscribe(query), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult
   public Single<DataSnapshot> onSingleValueEvent() {
-    return Single.create(new SingleValueEventOnSubscribe(getReference()));
+    return Single.create(new SingleValueEventOnSubscribe(query));
   }
 
   @CheckResult
   public Flowable<ChildEvent> onChildEvent() {
-    return Flowable.create(new ChildEventOnSubscribe(getReference()), BackpressureStrategy.BUFFER);
+    return Flowable.create(new ChildEventOnSubscribe(query), BackpressureStrategy.BUFFER);
   }
 
   @CheckResult
@@ -129,25 +121,25 @@ public final class RxFirebaseDatabase {
 
   @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase purgeOutstandingWrites() {
-    getReference().getDatabase().purgeOutstandingWrites();
+    query.getRef().getDatabase().purgeOutstandingWrites();
     return this;
   }
 
   @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase goOnline() {
-    getReference().getDatabase().goOnline();
+    query.getRef().getDatabase().goOnline();
     return this;
   }
 
   @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase goOffline() {
-    getReference().getDatabase().goOffline();
+    query.getRef().getDatabase().goOffline();
     return this;
   }
 
   @SuppressWarnings("UnusedReturnValue")
   public RxFirebaseDatabase setLogLevel(Logger.Level level) {
-    getReference().getDatabase().setLogLevel(level);
+    query.getRef().getDatabase().setLogLevel(level);
     return this;
   }
 }
