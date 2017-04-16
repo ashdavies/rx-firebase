@@ -5,6 +5,7 @@ Version 1.3.3 *(2017-04-16)*
 ----------------------------
 
  * Resolve incorrect usage of DatabaseReference
+ * Bump version to trigger bintray deploy
  
 Version 1.3.2 *(2017-04-13)*
 ----------------------------
