@@ -1,0 +1,47 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/android:api-27-alpha
+
+    environment:
+      ANDROID_HOME: /opt/android/sdk
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+
+      - run:
+          name: Run Gradle :check command
+          command: ./gradlew check --continue -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
+
+      - run:
+          name: Export Sonatype Credentials
+          command: |
+            echo "SONATYPE_NEXUS_USERNAME=${SONATYPE_NEXUS_USERNAME}" >> gradle.properties
+            echo "SONATYPE_NEXUS_PASSWORD=${SONATYPE_NEXUS_PASSWORD}" >> gradle.properties
+
+      - run:
+          name: Deploy Snapshot
+          command: .buildscript/deploy_snapshot.sh
+
+      - save_cache:
+          paths:
+            - /usr/local/android-sdk-linux/tools
+            - /usr/local/android-sdk-linux/platform-tools
+            - /usr/local/android-sdk-linux/build-tools
+            - /usr/local/android-sdk-linux/licenses
+            - /usr/local/android-sdk-linux/extras/google/m2repository
+            - ~/.gradle
+
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+
+      - store_artifacts:
+          path: library/build/reports
+          destination: reports
+
+      - store_test_results:
+          path: library/build/test-results
