@@ -1,21 +1,61 @@
-### Android RxFirebase
-![Build Status](https://img.shields.io/travis/ashdavies/rx-firebase.svg)
-![Coverage](https://img.shields.io/codecov/c/github/ashdavies/rx-firebase.svg)
-![Bintray](https://img.shields.io/bintray/v/ashdavies/maven/rx-firebase.svg)
-![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)
+# Android RxFirebase
 
+[![](https://img.shields.io/circleci/project/github/ashdavies/rx-firebase.svg)](https://circleci.com/gh/ashdavies/rx-firebase)
+[![](https://img.shields.io/codacy/coverage/03ae86d9ce934421879bc407aa157732.svg)](https://app.codacy.com/project/ash.davies/rx-firebase/dashboard)
+[![](https://img.shields.io/maven-central/v/io.ashdavies.rx.rxtasks/rx-firebase.svg)](https://search.maven.org/artifact/io.ashdavies.rx.rxfirebase/rx-firebase)
+![](https://img.shields.io/github/license/ashdavies/rx-firebase.svg)
 
+[![](https://img.shields.io/codacy/grade/03ae86d9ce934421879bc407aa157732.svg)](https://app.codacy.com/project/ash.davies/rx-firebase/dashboard)
+[![](https://img.shields.io/github/last-commit/ashdavies/rx-firebase.svg)](https://github.com/ashdavies/rx-firebase/commits/master)
+[![](https://img.shields.io/github/issues-pr/ashdavies/rx-firebase.svg)](https://github.com/ashdavies/rx-firebase/pulls)
 
-**RxJava wrapper for use with the Android Firebase client**
+**Simple and lightweight RxJava2 wrapper for use with the Android Firebase client**
 
-#### Installation
+## The Tasks API
+> Starting with Google Play services version 9.0.0, you can use a `Task` API and a number of methods
+that return `Task` or its subclasses. `Task` is an API that represents asynchronous method calls, similar to `PendingResult` in previous versions of Google Play Services.
+
+## Usage
+Many of the operations can be referenced in further detail in the
+[official documentation](https://firebase.google.com/docs/).
+
+Much of this library is built around the latest changes from the RxTasks library since many of the
+core functions return a `Task<T>` result which can easily be converted to an RxJava2 type.
+
+As such, much of the core behaviour using in previous versions of this library have been deprecated.
+With behaviour remaining to consume child events, and convert value events into RxJava2 types.
+
+> A common method that returns a `Task` is `FirebaseAuth.signInAnonymously()`. It returns a `Task<AuthResult>`
+ which means the task will return an `AuthResult` object when it succeeds.
+
+For example the Firebase sign in API asynchronously returns an `AuthResult` which can be consumed via
+`toSingle` method as an extension of `Task<T>`.
+
+If consuming from Java code, the class `RxFirebaseAuth` can be used with JVM static behaviour to
+honour previous API contracts, however these are marked as deprecated. Extension functions of provided
+types should be preferred.
+
+```kotlin
+FirebaseAuth
+  .getInstance()
+  .onAuthState()
+  .subscribe { /* ... */ }
+
+FirebaseDatabase
+  .getInstance()
+  .getReference("server/saving-data/fireblog/posts")
+  .onChildAdded<String>()
+  .subscribe { /* ... */ }
+```
+
+## Installation
 ```gradle
 dependencies {
-  compile "io.ashdavies.rx:rx-firebase:{latest-version}"
+  compile 'io.ashdavies.rx:rx-firebase:+'
 }
 ```
 
-#### Description
+## Description
 A lightweight RxJava2 wrapper for the Android Firebase client SDK, the user is expected
 to own the lifecycle of an asynchronous request via RxJava2 `Disposable` handling, however elements
 in this library will properly unregister listeners when a `Publisher` is cancelled, except in the
@@ -27,40 +67,6 @@ database reference, this is so that the reference hierarchy can easily be traver
 and parent elements. Methods requiring `FirebaseDatabase` obtain this from the `DatabaseReference`
 and allow you to chain further requests by returning itself.
 
-This library depends on `RxTasks` and `RxJava2` to provide appropriate api responses.
-Therefore asynchronous responses will return, `Single`, `Completable` and `Flowable` respectively.
-
-#### Usage
-Many of the operations can be referenced in further detail in the
-[official documentation](https://firebase.google.com/docs/).
-
-An instance of either `RxFirebaseAuth` or `RxFirebaseDatabase` can be retrieved using their 
-respective `getInstance` method, which will then use the default Firebase element. Alternatively 
-this can also be provided as a parameter should you wish to use a custom one.
-
-##### RxFirebaseAuth
-RxFirebaseAuth has a fairly mirrored api to that of `FirebaseAuth` and can in most cases be used
-as a drop in replacement. Methods which have no return value will return the instance so that
-methods can be chained.
-
-Calls to `getCurrentUser()` will return a Maybe emitting the user only if the user is logged in
-otherwise it will just call `onComplete` immediately.
-
-
-##### RxFirebaseDatabase
-RxFirebaseDatabase has a simple interface which also mimics that of its Firebase counterpart, at
-this time it is not worthwhile to facilitate all the features available via the Query interface
-therefore it is possible to use a `Query` object with `RxFirebaseDatabase.with(query)`.
-
-The main responsibility of `RxFirebaseDatabase` is to be able to consume child and value events
-using reactive extensions, such as retrieving values, setting and removing values.
-
-One of the main observations here is the consumption of child events, this is achieved through
-the use of the `ChildEvent` object which has reference to the event type, and data snapshot which
-can then be used to resolve the data value.
-
-#### Sample
-To run the example application, copy your own `google-services.json` from Firebase into
-the `sample` directory.
-An example database and read-only rule set are in `sample-database.json` and `sample-rules.json`.
-Anonymous Authentication will also need to be enabled.
+## Future development
+Further development for this library has not been planned, and will soon become deprecated,
+it is recommended to use Kotlin [Coroutines integration](https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services) with Google Play Services [Tasks API](https://developers.google.com/android/guides/tasks).
